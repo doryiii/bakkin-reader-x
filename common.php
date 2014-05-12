@@ -1,5 +1,5 @@
 <?php
-$server_root = "/reader/";
+$script_path = "/reader/";
 $content_dir = "content";
 $thumbcache_dir = "cache/thumbs";
 $imgcache_dir = "cache/imgs";

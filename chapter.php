@@ -5,9 +5,9 @@ require "common.php";
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<?php echo $server_root; ?>reader.css" />
+    <link rel="stylesheet" type="text/css" href="reader.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script src="<?php echo $server_root; ?>imagesloaded.pkgd.min.js"></script>
+    <script src="imagesloaded.pkgd.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
         mainimg = $('#pageview img');
@@ -128,10 +128,10 @@ foreach ($all_files as $file) {
     $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";
     if (!file_exists($thumb))
         create_img($content_dir . $f, $thumb, 80, 100);
-    $thumburl = $server_root . $thumb;
+    $thumburl = $thumb;
 
     $img = $imgcache_dir . "/" . sha1($f) . ".jpg";
-    $imgurl = $server_root . (file_exists($img) ? $img : "img.php?" . $f);
+    $imgurl = file_exists($img) ? $img : "img.php?" . $f;
 
     echo "<a href='#" . $i . "' class='thumbbox' data-id='". $i . "'>";
     echo "<img class='thumb' src='" . $thumburl .
@@ -143,7 +143,7 @@ foreach ($all_files as $file) {
 </div>
 
 <div id='navbar'>
-<a class='navbtn' id='back' href='<?php echo $server_root; ?>'>^ Back home</a>
+<a class='navbtn' id='back' href='<?php echo $script_path; ?>'>^ Back home</a>
 <?php
 
 $dir_explode = array_filter(explode("/", $chap));
@@ -167,12 +167,12 @@ if ($i < count($all_chapters) - 1)
     $next = $all_chapters[$i+1];
 
 if ($prev != "") {
-    $url = $server_root . "chapter.php?/" . tourl($series . "/" . $prev);
+    $url = "chapter.php?/" . tourl($series . "/" . $prev);
     echo "<a class='navbtn' id='prev' href='" . $url . "'>&lt;&lt; " . $prev . "</a>";
 }
 
 if ($next != "") {
-    $url = $server_root . "chapter.php?/" . tourl($series . "/" . $next);
+    $url = "chapter.php?/" . tourl($series . "/" . $next);
     echo "<a class='navbtn' id='next' href='" . $url . "'>" . $next . " &gt;&gt;</a>";
 }
 

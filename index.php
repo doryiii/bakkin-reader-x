@@ -4,7 +4,7 @@ require "common.php";
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="<?php echo $server_root; ?>reader.css" />
+    <link rel="stylesheet" type="text/css" href="reader.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
@@ -47,9 +47,9 @@ foreach ($all_series as $series) {
         if (!normal_dir($chapter, $series_dir)) continue;
         $chapter_dir = $series_dir . "/" . $chapter;
 
-        echo "<a class='chaplink' href='" . $server_root . "chapter.php?/" .
+        echo "<a class='chaplink' href='chapter.php?/" .
              tourl($series . "/" . $chapter) . "'>";
-        echo "<img src='" . $server_root . $chapter_dir . "/thumb.png' />" .
+        echo "<img src='" . $chapter_dir . "/thumb.png' />" .
              "<span>" . $chapter . "</span></a>";
     }
 

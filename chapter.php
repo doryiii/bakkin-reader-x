@@ -5,6 +5,7 @@ require "common.php";
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="icon" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="reader.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script src="imagesloaded.pkgd.min.js"></script>

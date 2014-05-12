@@ -54,7 +54,7 @@ a, a:visited {
     overflow: hidden;
     font-size: 12px;
     display: block;
-    margin: 12px 0px;
+    margin: 8px 0px;
 }
 .chaplink:hover {
     background-color: #555555;

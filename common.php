@@ -41,7 +41,9 @@ function create_img($orig, $dest, $width, $height) {
                            $width, $height, $orig_width, $orig_height);
         imagejpeg($img_thumb, $dest, 80);
     } else {
-        imagejpeg($img_orig, $dest, 80);
+        imagecopyresampled($img_thumb, $img_orig, 0, 0, 0, 0,
+                           $orig_width, $orig_height, $orig_width, $orig_height);
+        imagejpeg($img_thumb, $dest, 80);
     }
 }
 

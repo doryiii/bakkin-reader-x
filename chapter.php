@@ -71,6 +71,30 @@ require "common.php";
         });
         imgLoad.on('always', function() {
         });
+
+        // Handle arrow keys
+        $(document).keydown(function(e){
+            var id = parseInt(location.hash.replace('#', ''));
+            var newid = id + 1;
+            if (e.keyCode == 37) {
+                if (id > 0)
+                    location.hash = (id - 1).toString();
+                else if ($('#prev').length > 0)
+                    location.href = $('#prev').attr('href');
+                else
+                    alert("First page");
+            } else if (e.keyCode == 39) {
+                if (newid < thumbboxes.length)
+                    location.hash = newid;
+                else if ($('#next').length > 0)
+                    location.href = $('#next').attr('href');
+                else
+                    alert("End");
+            } else {
+                return true;
+            }
+            return false;
+        });
     });
     </script>
 </head>
@@ -102,7 +126,9 @@ foreach ($all_files as $file) {
     $f = $chap . "/" . $file;
 
     $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";
-    $thumburl = $server_root . (file_exists($thumb) ? $thumb : "thumb.php?" . $f);
+    if (!file_exists($thumb))
+        create_img($content_dir . $f, $thumb, 80, 100);
+    $thumburl = $server_root . $thumb;
 
     $img = $imgcache_dir . "/" . sha1($f) . ".jpg";
     $imgurl = $server_root . (file_exists($img) ? $img : "img.php?" . $f);

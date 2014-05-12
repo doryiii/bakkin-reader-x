@@ -1,0 +1,144 @@
+body {
+    background-color: #222222;
+    color: #CCCCCC;
+    padding-bottom: 15px;
+    /*font-family: sans-serif;*/
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+a, a:visited {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+/* Below are mostly for the series page */
+#pagetitle {
+    margin-bottom: 10px;
+}
+#apptitle, #chaptitle {
+    font-size: larger;
+    font-weight: bold;
+}
+#appsubtitle, #chapchapter {
+    font-size: smaller;
+    font-weight: bolder;
+    font-style: italic;
+    margin: 0px 10px;
+}
+
+#banner img {
+    border: 2px solid #888888;
+    margin: 5px;
+    float: left;
+    overflow: hidden;
+}
+
+.seri {
+    float: left;
+    margin: 10px;
+    border-left: 1px solid gray;
+}
+
+.serititle {
+    font-weight: bold;
+    padding: 1px 5px;
+    cursor: pointer;
+}
+.serititle:hover {
+    background-color: #555555;
+}
+
+.chaplink {
+    padding-left: 5px;
+    height: 35px;
+    overflow: hidden;
+    font-size: 12px;
+    display: block;
+    margin: 12px 0px;
+}
+.chaplink:hover {
+    background-color: #555555;
+}
+.chaplink img {
+    border: 2px solid gray;
+    width: 36px;
+    height: 36px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.chaplink span {
+    position: relative;
+    top: -15px;
+    padding: 10px;
+    display: inline-block;
+}
+
+
+/* Below are mostly for the chapter page */
+
+#thumbbar, #navbar {
+    display: block;
+    margin: 3px;
+}
+
+.thumbbox {
+    height: 100px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 1px;
+}
+.thumbbox img {
+    border: 2px solid gray;
+    max-width: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
+    margin: auto;
+}
+.thumbbox[data-sel=yes]:after, .thumbbox[data-sel=yes]:after:visited {
+    background: #333;
+    background: rgba(0,0,0,.7);
+    border-radius: 5px;
+    color: #fff;
+    content: attr(data-id);
+    padding: 3px 10px;
+    position: relative;
+    top: -33px;
+    left: 10px;
+    width: 30px;
+    height: 20px;
+    text-align: center;
+    z-index: 98;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+}
+
+.navbtn, .navbtn:visited {
+    border: 2px solid gray;
+    display: inline-block;
+    padding: 2px;
+    font-size: small;
+    text-decoration: none;
+    color: inherit;
+    margin: 1px;
+}
+
+#pageview {
+    display: block;
+    width: 100%;
+}
+#pageview img {
+    margin: 5px auto;
+    display: block;
+    cursor: pointer;
+}
+
+#preloader img {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    left: -1px;
+    bottom: 0px;
+    float:left;
+}
+

@@ -113,7 +113,7 @@ require "common.php";
 
 <div id='titlebar'>
 <?php
-$chap = urldecode($_SERVER["QUERY_STRING"]);
+$chap = sanitize(urldecode($_SERVER["QUERY_STRING"]));
 $dir_explode = array_filter(explode("/", $chap));
 echo "<span id='chaptitle'>" . $dir_explode[0] . "</span>";
 echo "<span id='chapchapter'>" . $dir_explode[1] . "</span>";

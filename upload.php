@@ -24,8 +24,8 @@ function delTree($dir) {
 } 
 
 $secret = $_POST["secret"];
-$series = $_POST["series"];
-$chapter = $_POST["chapter"];
+$series = sanitize($_POST["series"]);
+$chapter = sanitize($_POST["chapter"]);
 $tmpfile = $_FILES["file"]["tmp_name"];
 
 if ($_FILES["file"]["error"] > 0 || $secret != $fixed_secret) {

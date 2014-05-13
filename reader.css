@@ -10,6 +10,9 @@ a, a:visited {
     color: inherit;
     text-decoration: inherit;
 }
+a:hover {
+    background-color: #555555;
+}
 
 /* Below are mostly for the series page */
 #pagetitle {
@@ -55,9 +58,6 @@ a, a:visited {
     font-size: 12px;
     display: block;
     margin: 8px 0px;
-}
-.chaplink:hover {
-    background-color: #555555;
 }
 .chaplink img {
     border: 2px solid gray;

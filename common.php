@@ -1,4 +1,9 @@
 <?php
+/* Note:
+    path format, used for caching: "/1 Yuru Yuri/Blu-Ray Special/16.jpg"
+    thumb and img caches are in cache/thumbs and cache/imgs, with file names
+    consists of sha1 of the path name above, plus ".jpg"
+*/
 $script_path = "/reader/";
 $content_dir = "content";
 $thumbcache_dir = "cache/thumbs";

@@ -19,6 +19,10 @@ require "common.php";
             $(this).siblings('.sericontent').slideToggle();
             $(this).siblings('.sericontent').filter(':visible').css({'display': 'block'});
         });
+
+        $('#bakkin-img').dblclick(function () {
+            location.href='admin.php';
+        });
     });
     </script>
 </head>
@@ -27,7 +31,7 @@ require "common.php";
 <div id='banner'>
 <img src='img/titleb_1.png' />
 <img src='img/titleb_2.png' />
-<img src='img/titleb_3.png' />
+<img id='bakkin-img' src='img/titleb_3.png' />
 <img src='img/titleb_4.png' />
 <img src='img/titleb_5.png' />
 <img src='img/titleb_6.png' />

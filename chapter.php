@@ -16,6 +16,7 @@ require "common.php";
         mainlink = $('#pageview img');
         thumbboxes = $('a.thumbbox');
         mainlinkclicked = false;
+        arrowkeyused = false;
 
         // onhashchange == new image requested
         window.onhashchange = function() {
@@ -27,9 +28,10 @@ require "common.php";
             imagesLoaded(mainimg, function() {
                 $('a.thumbbox[data-sel="yes"]').removeAttr('data-sel');
                 $('a.thumbbox[href="' + location.hash + '"]').attr('data-sel', 'yes');
-                if (mainlinkclicked) {
+                if (mainlinkclicked || arrowkeyused) {
                     $('html, body').animate({scrollTop: $('#navbar').offset().top}, 200);
                     mainlinkclicked = false;
+                    arrowkeyused = false;
                 }
 
                 // Preloading stuffs here
@@ -79,13 +81,15 @@ require "common.php";
             var id = parseInt(location.hash.replace('#', ''));
             var newid = id + 1;
             if (e.keyCode == 37) {
+                arrowkeyused = true;
                 if (id > 0)
                     location.hash = (id - 1).toString();
                 else if ($('#prev').length > 0)
-                    location.href = $('#prev').attr('href');
+                    location.href = $('#prev').attr('data-lastpage');
                 else
                     alert("First page");
             } else if (e.keyCode == 39) {
+                arrowkeyused = true;
                 if (newid < thumbboxes.length)
                     location.hash = newid;
                 else if ($('#next').length > 0)
@@ -157,6 +161,7 @@ $all_chapters = scandir($series_dir);
 $prev = "";
 $next = "";
 
+// Look for the current one in the list, and deduce prev/next chapter
 for ($i=0; $i<count($all_chapters); $i++) {
     $chapter = $all_chapters[$i];
     if (!normal_dir($chapter, $series_dir)) continue;
@@ -169,8 +174,15 @@ if ($i < count($all_chapters) - 1)
     $next = $all_chapters[$i+1];
 
 if ($prev != "") {
+    $prev_dir = $content_dir . "/" . $series . "/" . $prev;
+    $prev_fs = scandir($prev_dir);
+    $prev_files = array_filter($prev_fs, function($f) use($prev_dir) {
+        return is_file($prev_dir . "/" . $f) && ($f != "thumb.png"); });
+
     $url = "chapter.php?/" . tourl($series . "/" . $prev);
-    echo "<a class='navbtn' id='prev' href='" . $url . "'>&lt;&lt; " . $prev . "</a>";
+    $last_prev_url = $url . "#" . (count($prev_files) - 1);
+    echo "<a class='navbtn' id='prev' href='" . $url . "' data-lastpage='" .
+         $last_prev_url . "'>&lt;&lt; " . $prev . "</a>";
 }
 
 if ($next != "") {

@@ -143,21 +143,13 @@ a:hover {
 }
 
 
-@keyframes bakkinfade {
-    0%   {opacity: 1.0;}
-    40%  {opacity: 0.8;}
-    50%  {opacity: 0.5;}
-    60%  {opacity: 0.8;}
-    100% {opacity: 1.0;}
+@keyframes bakkinflicker {
+    to { visibility: hidden; }
 }
-@-webkit-keyframes bakkinfade {
-    0%   {opacity: 1.0;}
-    40%  {opacity: 0.8;}
-    50%  {opacity: 0.5;}
-    60%  {opacity: 0.8;}
-    100% {opacity: 1.0;}
+@-webkit-keyframes bakkinflicker {
+    to { visibility: hidden; }
 }
 #bakkin-img {
-    animation: bakkinfade 10s linear 0s infinite;
-    -webkit-animation: bakkinfade 10s linear 0s infinite;
+    animation: bakkinflicker 10s steps(100, start) 0s infinite;
+    -webkit-animation: bakkinflicker 10s steps(100, start) 0s infinite;
 }

@@ -53,7 +53,7 @@ foreach ($all_series as $series) {
         if (!normal_dir($chapter, $series_dir)) continue;
         $chapter_dir = $series_dir . "/" . $chapter;
 
-        echo "<a class='chaplink' href='chapter.php?/" .
+        echo "<a class='chaplink' href='chapter.php?" .
              tourl($series . "/" . $chapter) . "'>";
         echo "<img src='" . $chapter_dir . "/thumb.png' />" .
              "<span>" . $chapter . "</span></a>";

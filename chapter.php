@@ -80,6 +80,9 @@ require "common.php";
         $(document).keydown(function(e){
             var id = parseInt(location.hash.replace('#', ''));
             var newid = id + 1;
+            if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+                return true;
+
             if (e.keyCode == 37) {
                 arrowkeyused = true;
                 if (id > 0)
@@ -88,6 +91,7 @@ require "common.php";
                     location.href = $('#prev').attr('data-lastpage');
                 else
                     alert("First page");
+                return false;
             } else if (e.keyCode == 39) {
                 arrowkeyused = true;
                 if (newid < thumbboxes.length)
@@ -96,10 +100,9 @@ require "common.php";
                     location.href = $('#next').attr('href');
                 else
                     alert("End");
-            } else {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         });
     });
     </script>
@@ -112,16 +115,15 @@ require "common.php";
 <?php
 $chap = urldecode($_SERVER["QUERY_STRING"]);
 $dir_explode = array_filter(explode("/", $chap));
-echo "<span id='chaptitle'>" . $dir_explode[1] . "</span>";
-echo "<span id='chapchapter'>" . $dir_explode[2] . "</span>";
+echo "<span id='chaptitle'>" . $dir_explode[0] . "</span>";
+echo "<span id='chapchapter'>" . $dir_explode[1] . "</span>";
 ?>
 </div>
 
 <div id='thumbbar'>
 <?php
 
-$chap = urldecode($_SERVER["QUERY_STRING"]);
-$chap_dir = $content_dir . $chap;
+$chap_dir = $content_dir . "/" . $chap;
 $fs = scandir($chap_dir);
 
 $all_files = array_filter($fs, function($f) use($chap_dir) {
@@ -133,7 +135,7 @@ foreach ($all_files as $file) {
 
     $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";
     if (!file_exists($thumb))
-        create_img($content_dir . $f, $thumb, 80, 100);
+        create_img($content_dir . "/" . $f, $thumb, 80, 100);
     $thumburl = $thumb;
 
     $img = $imgcache_dir . "/" . sha1($f) . ".jpg";
@@ -152,7 +154,6 @@ foreach ($all_files as $file) {
 <a class='navbtn' id='back' href='<?php echo $script_path; ?>'>^ Back home</a>
 <?php
 
-$dir_explode = array_filter(explode("/", $chap));
 $cur_chap = array_pop($dir_explode);
 $series = implode("/", $dir_explode);
 $series_dir = $content_dir . "/" . $series;
@@ -179,14 +180,14 @@ if ($prev != "") {
     $prev_files = array_filter($prev_fs, function($f) use($prev_dir) {
         return is_file($prev_dir . "/" . $f) && ($f != "thumb.png"); });
 
-    $url = "chapter.php?/" . tourl($series . "/" . $prev);
+    $url = "chapter.php?" . tourl($series . "/" . $prev);
     $last_prev_url = $url . "#" . (count($prev_files) - 1);
     echo "<a class='navbtn' id='prev' href='" . $url . "' data-lastpage='" .
          $last_prev_url . "'>&lt;&lt; " . $prev . "</a>";
 }
 
 if ($next != "") {
-    $url = "chapter.php?/" . tourl($series . "/" . $next);
+    $url = "chapter.php?" . tourl($series . "/" . $next);
     echo "<a class='navbtn' id='next' href='" . $url . "'>" . $next . " &gt;&gt;</a>";
 }
 

@@ -55,8 +55,8 @@ function create_img($orig, $dest, $width, $height) {
 function caching_headers($file, $timestamp) {
     $gmt_mtime = gmdate('r', $timestamp);
     header('ETag: "'.md5($timestamp.$file).'"');
-    header('Last-Modified: '.gmdate('r', $timestamp));
-    header('Expires: '.gmdate('r', $timestamp + 60*60*24*7));
+    header('Last-Modified: '.gmdate('r', $timestamp).' GMT');
+    header('Expires: '.gmdate('r', $timestamp + 60*60*24*7).' GMT');
     header('Cache-Control: public');
 
     if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {

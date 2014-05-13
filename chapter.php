@@ -28,7 +28,7 @@ require "common.php";
                 $('a.thumbbox[data-sel="yes"]').removeAttr('data-sel');
                 $('a.thumbbox[href="' + location.hash + '"]').attr('data-sel', 'yes');
                 if (mainlinkclicked) {
-                    $('#navbar')[0].scrollIntoView(true);
+                    $('html, body').animate({scrollTop: $('#navbar').offset().top}, 200);
                     mainlinkclicked = false;
                 }
 

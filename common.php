@@ -8,6 +8,7 @@ $script_path = "/reader/";
 $content_dir = "content";
 $thumbcache_dir = "cache/thumbs";
 $imgcache_dir = "cache/imgs";
+$secret_file = ".htsecret";
 
 function tourl($path) {
     return str_replace("%2F", "/", urlencode($path));

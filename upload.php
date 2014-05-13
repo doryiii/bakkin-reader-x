@@ -10,7 +10,8 @@
 <?php
 require "common.php";
 
-$fixed_secret = "doryrocks";
+$sec_read = file($secret_file, FILE_IGNORE_NEW_LINES);
+$fixed_secret = $sec_read[0];
 
 function delTree($dir) {
     // Don't delete the entire application by accident!

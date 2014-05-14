@@ -42,7 +42,7 @@
         <input type='radio' name='series' id='r_5' value='Miscellaneous' /><label for='r_5'>Miscellaneous</label><br/>
     </td></tr>
     <tr><td>Chapter Name</td><td><input type='text' name='chapter' /></td></tr>
-    <tr><td>Zip file</td><td><input type='file' name='file' /></td></tr>
+    <tr><td>Zip file (no rar!)</td><td><input type='file' name='file' /></td></tr>
     <tr><td></td><td><input type='submit' value='Upload' /></td></tr>
     <tr><td colspan=2>Zip file format: PNG or JPG, with a thumb.png for the chapter thumbnail.
     No 2 file can have the same name (they will overwrite each other).</td></tr>

@@ -37,13 +37,13 @@ if ($gen_thumb || $gen_all) {
     $size = fgets ( $io, 4096);
     $size = substr ( $size, 0, strpos ( $size, "\t" ) );
     pclose ( $io );
-    echo '<p>Thumbnail cache: ' . $f . ' => Size: <strong>' . $size . "</strong></p>";
+    echo '<p>Thumbnail cache: ' . $thumbcache_dir . ' => Size: <strong>' . $size . "</strong></p>";
 
     $io = popen ( '/usr/bin/du -sh ' . $imgcache_dir, 'r' );
     $size = fgets ( $io, 4096);
     $size = substr ( $size, 0, strpos ( $size, "\t" ) );
     pclose ( $io );
-    echo '<p>Resized images cache: ' . $f . ' => Size: <strong>' . $size . "</strong></p>";
+    echo '<p>Resized images cache: ' . $imgcache_dir . ' => Size: <strong>' . $size . "</strong></p>";
 }
 
 echo "<table>";

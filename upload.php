@@ -50,7 +50,7 @@ exec("/usr/bin/find '".$tmp_dir."' -type f \( -iname '*.png' -o ".
 delTree($tmp_dir);
 
 echo "Done!<br />";
-echo "<a href='chapter.php?/".$series."/".$chapter."'>&gt; Link to the chapter</a>";
+echo "<a href='chapter.php?".$series."/".$chapter."'>&gt; Link to the chapter</a>";
 
 ?>
 </body>

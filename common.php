@@ -49,15 +49,14 @@ function create_img($orig, $dest, $width, $height) {
     } elseif (endsWith($orig, ".jpg") || endsWith($orig, ".jpeg")) {
         $img_orig = imagecreatefromjpeg($orig);
     }
-    $img_thumb = imagecreatetruecolor($width, $height);
 
     // Only downsize, don't expand
     if ($width < $orig_width || $height < $orig_height) {
+        $img_thumb = imagecreatetruecolor($width, $height);
         imagecopyresampled($img_thumb, $img_orig, 0, 0, 0, 0,
                            $width, $height, $orig_width, $orig_height);
     } else {
-        imagecopyresampled($img_thumb, $img_orig, 0, 0, 0, 0,
-                           $orig_width, $orig_height, $orig_width, $orig_height);
+        $img_thumb = $img_orig;
     }
 
     imageinterlace($img_thumb, true);
@@ -72,10 +71,8 @@ function caching_headers($file, $timestamp) {
     header('Cache-Control: public');
 
     if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-        //if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmt_mtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($timestamp.$file)) {
-            header('HTTP/1.1 304 Not Modified');
-            exit();
-        //}
+        header('HTTP/1.1 304 Not Modified');
+        exit();
     }
 }
 

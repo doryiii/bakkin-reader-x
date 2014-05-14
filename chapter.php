@@ -76,7 +76,7 @@ require "common.php";
         $(document).keydown(function(e){
             var id = parseInt(location.hash.replace('#', ''));
             var newid = id + 1;
-            if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)
+            if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)
                 return true;
 
             if (e.keyCode == 37) {

@@ -54,12 +54,13 @@ function create_img($orig, $dest, $width, $height) {
     if ($width < $orig_width || $height < $orig_height) {
         imagecopyresampled($img_thumb, $img_orig, 0, 0, 0, 0,
                            $width, $height, $orig_width, $orig_height);
-        imagejpeg($img_thumb, $dest, 80);
     } else {
         imagecopyresampled($img_thumb, $img_orig, 0, 0, 0, 0,
                            $orig_width, $orig_height, $orig_width, $orig_height);
-        imagejpeg($img_thumb, $dest, 80);
     }
+
+    imageinterlace($img_thumb, true);
+    imagejpeg($img_thumb, $dest, 80);
 }
 
 function caching_headers($file, $timestamp) {

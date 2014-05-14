@@ -50,6 +50,9 @@ a:hover {
 .serititle:hover {
     background-color: #555555;
 }
+#pagenum {
+    font-size: small;
+}
 
 .chaplink {
     padding-left: 5px;
@@ -121,6 +124,7 @@ a:hover {
     text-decoration: none;
     color: inherit;
     margin: 1px;
+    cursor: pointer;
 }
 
 #pageview {

@@ -20,41 +20,34 @@ require "common.php";
 
         // onhashchange == new image requested
         window.onhashchange = function() {
-            var id = 0;
+            var id = 1;
             if (location.hash.length > 0)
                 id = location.hash.replace('#', '');
+            $('a.thumbbox[data-sel="yes"]').removeAttr('data-sel');
+            $('a.thumbbox[href="' + location.hash + '"]').attr('data-sel', 'yes');
+            mainlink.attr('data-current', id);
+            $('#pagenum').text("pg. " + id);
             
             mainimg.attr('src', '');
             imagesLoaded(mainimg, function() {
-                $('a.thumbbox[data-sel="yes"]').removeAttr('data-sel');
-                $('a.thumbbox[href="' + location.hash + '"]').attr('data-sel', 'yes');
-                if (mainlinkclicked || arrowkeyused) {
-                    $('html, body').animate({scrollTop: $('#navbar').offset().top}, 200);
-                    mainlinkclicked = false;
-                    arrowkeyused = false;
-                }
-
                 // Preloading stuffs here
                 var newid = parseInt(location.hash.replace('#', '')) + 1;
-                if (newid < thumbboxes.length) {
+                if (newid <= thumbboxes.length) {
                     $('#preloader img').attr('src', $('.thumbbox[href="#' + newid + '"] img').attr('data-src'));
                 }
             });
             mainimg.attr('src', $('.thumbbox[href="#' + id + '"] img').attr('data-src'));
-            mainlink.attr('data-current', id);
-
         }
         if (location.hash.length <= 0)
-            location.hash = '0';
+            location.hash = '1';
         else
             window.onhashchange();
 
         // Handles clicking on the current image (advances to next img)
         mainlink.click(function() {
             newid = parseInt(location.hash.replace('#', '')) + 1;
-            if (newid < thumbboxes.length) {
+            if (newid <= thumbboxes.length) {
                 location.hash = newid;
-                mainlinkclicked = true;
             } else if ($('#next').length > 0) {
                 location.href = $('#next').attr('href');
             } else {
@@ -84,8 +77,7 @@ require "common.php";
                 return true;
 
             if (e.keyCode == 37) {
-                arrowkeyused = true;
-                if (id > 0)
+                if (id > 1)
                     location.hash = (id - 1).toString();
                 else if ($('#prev').length > 0)
                     location.href = $('#prev').attr('data-lastpage');
@@ -93,8 +85,7 @@ require "common.php";
                     alert("First page");
                 return false;
             } else if (e.keyCode == 39) {
-                arrowkeyused = true;
-                if (newid < thumbboxes.length)
+                if (newid <= thumbboxes.length)
                     location.hash = newid;
                 else if ($('#next').length > 0)
                     location.href = $('#next').attr('href');
@@ -103,6 +94,11 @@ require "common.php";
                 return false;
             }
             return true;
+        });
+
+        // Show/hide thumbnail bar
+        $('#togglethumbbar').click(function() {
+            $('#thumbbar').slideToggle();
         });
     });
     </script>
@@ -118,9 +114,10 @@ $dir_explode = array_filter(explode("/", $chap));
 echo "<span id='chaptitle'>" . $dir_explode[0] . "</span>";
 echo "<span id='chapchapter'>" . $dir_explode[1] . "</span>";
 ?>
+<span id='pagenum'></span>
 </div>
 
-<div id='thumbbar'>
+<div id='thumbbar' style='display:none;'>
 <?php
 
 $chap_dir = $content_dir . "/" . $chap;
@@ -129,7 +126,7 @@ $fs = scandir($chap_dir);
 $all_files = array_filter($fs, function($f) use($chap_dir) {
     return is_file($chap_dir . "/" . $f) && ($f != "thumb.png"); });
 
-$i = 0;
+$i = 1;
 foreach ($all_files as $file) {
     $f = $chap . "/" . $file;
 
@@ -152,6 +149,7 @@ foreach ($all_files as $file) {
 
 <div id='navbar'>
 <a class='navbtn' id='back' href='<?php echo $script_path; ?>'>^ Back home</a>
+<a class='navbtn' id='togglethumbbar'>Show/hide thumbnails</a>
 <?php
 
 $cur_chap = array_pop($dir_explode);
@@ -181,7 +179,7 @@ if ($prev != "") {
         return is_file($prev_dir . "/" . $f) && ($f != "thumb.png"); });
 
     $url = "chapter.php?" . tourl($series . "/" . $prev);
-    $last_prev_url = $url . "#" . (count($prev_files) - 1);
+    $last_prev_url = $url . "#" . count($prev_files);
     echo "<a class='navbtn' id='prev' href='" . $url . "' data-lastpage='" .
          $last_prev_url . "'>&lt;&lt; " . $prev . "</a>";
 }

@@ -37,6 +37,9 @@ require "common.php";
                 }
             });
             mainimg.attr('src', $('.thumbbox[href="#' + id + '"] img').attr('data-src'));
+
+            // Autoscroll to top page
+            $('html, body').animate({scrollTop: $('html').offset().top}, 200);
         }
         if (location.hash.length <= 0)
             location.hash = '1';

@@ -114,8 +114,17 @@ require "common.php";
 <?php
 $chap = sanitize(urldecode($_SERVER["QUERY_STRING"]));
 $dir_explode = array_filter(explode("/", $chap));
-echo "<span id='chaptitle'>" . $dir_explode[0] . "</span>";
-echo "<span id='chapchapter'>" . $dir_explode[1] . "</span>";
+$series = $dir_explode[0];
+$cur_chap = $dir_explode[1];
+
+$icon_f = $series . "/" . $cur_chap . "/thumb.png";
+$icon = $iconcache_dir . "/" . sha1($icon_f) . ".jpg";
+if (!file_exists($icon))
+    create_img($content_dir . "/" . $icon_f, $icon, 35, 35);
+
+echo "<span id='chaptitle'>" . $series . "</span>";
+echo "<img id='chapicon' src='" . $icon . "'/>";
+echo "<span id='chapchapter'>" . $cur_chap . "</span>";
 ?>
 <span id='pagenum'></span>
 </div>
@@ -136,13 +145,12 @@ foreach ($all_files as $file) {
     $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";
     if (!file_exists($thumb))
         create_img($content_dir . "/" . $f, $thumb, 80, 100);
-    $thumburl = $thumb;
 
     $img = $imgcache_dir . "/" . sha1($f) . ".jpg";
     $imgurl = file_exists($img) ? $img : "img.php?" . $f;
 
     echo "<a href='#" . $i . "' class='thumbbox' data-id='". $i . "'>";
-    echo "<img class='thumb' src='" . $thumburl .
+    echo "<img class='thumb' src='" . $thumb .
          "' data-src='" . $imgurl . "'/>";
     echo "</a>";
     $i++;
@@ -155,8 +163,6 @@ foreach ($all_files as $file) {
 <a class='navbtn' id='togglethumbbar'>Show/hide thumbnails</a>
 <?php
 
-$cur_chap = array_pop($dir_explode);
-$series = implode("/", $dir_explode);
 $series_dir = $content_dir . "/" . $series;
 $all_chapters = scandir($series_dir);
 

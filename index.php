@@ -55,7 +55,13 @@ foreach ($all_series as $series) {
 
         echo "<a class='chaplink' href='chapter.php?" .
              tourl($series . "/" . $chapter) . "'>";
-        echo "<img src='" . $chapter_dir . "/thumb.png' />" .
+
+        $f = $series . "/" . $chapter . "/thumb.png";
+        $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
+        if (!file_exists($icon))
+            create_img($content_dir . "/" . $f, $icon, 35, 35);
+
+        echo "<img src='" . $icon . "' />" .
              "<span>" . $chapter . "</span></a>";
     }
 

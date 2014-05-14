@@ -59,13 +59,29 @@ foreach ($all_series as $series) {
 
 
         $fs = scandir($chap_dir);
-        $all_files = array_filter($fs, function($f) use($chap_dir) {
+        $page_files = array_filter($fs, function($f) use($chap_dir) {
             return is_file($chap_dir . "/" . $f) && ($f != "thumb.png"); });
+        $icon_files = array_filter($fs, function($f) use($chap_dir) {
+            return is_file($chap_dir . "/" . $f) && ($f == "thumb.png"); });
+
 
         $i = 0;
-        foreach ($all_files as $file) {
+        foreach ($icon_files as $file) {
             $f = $series . "/" . $chapter . "/" . $file;
-            $f_dir = $chapter_dir . "/" . $file;
+            echo "<tr><td>" . $series . "</td><td>" . $chapter . "</td><td>" . $file . "</td><td>";
+            $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
+            if (file_exists($icon)) {
+                echo "<span class='old'>" . $icon . "</span>";
+            } else if ($gen_thumb || $gen_all) {
+                create_img($content_dir . "/" . $f, $icon, 80, 100);
+                echo "<span class='new'>" . $icon . "</span>";
+            }
+            echo "</td><td>";
+            echo "</td></tr>";
+        }
+
+        foreach ($page_files as $file) {
+            $f = $series . "/" . $chapter . "/" . $file;
 
             echo "<tr><td>" . $series . "</td><td>" . $chapter . "</td><td>" . $file . "</td><td>";
             $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";

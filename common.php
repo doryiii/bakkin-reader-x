@@ -10,6 +10,10 @@ $thumbcache_dir = "cache/thumbs";
 $imgcache_dir = "cache/imgs";
 $iconcache_dir = "cache/icons";
 $secret_file = ".htsecret";
+$max_img_width = 1150;
+$max_img_height = 1150;
+$max_thumb_width = 80;
+$max_thumb_height = 100;
 
 function tourl($path) {
     return str_replace("%2F", "/", urlencode($path));

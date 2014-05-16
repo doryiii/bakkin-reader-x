@@ -144,7 +144,8 @@ foreach ($all_files as $file) {
 
     $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";
     if (!file_exists($thumb))
-        create_img($content_dir . "/" . $f, $thumb, 80, 100);
+        create_img($content_dir . "/" . $f, $thumb,
+                   $max_thumb_width, $max_thumb_height);
 
     $img = $imgcache_dir . "/" . sha1($f) . ".jpg";
     $imgurl = file_exists($img) ? $img : "img.php?" . $f;

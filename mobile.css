@@ -1,0 +1,9 @@
+body { margin: 3px; }
+#pageview img { margin: 0px; width: 100%; }
+.seri { float: none; }
+.serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
+.chaplink span { font-size: medium; }
+#banner img[id!=bakkin-img] { display: none; }
+#chapicon { display: none; }
+#chaptitle, #chapnumber, #pagenumber { margin: 0px 3px; }
+

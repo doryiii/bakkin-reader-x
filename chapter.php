@@ -6,17 +6,18 @@ require "common.php";
 <html>
 <head>
     <title>Bakkin Reader X - Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
     <link rel="icon" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="reader.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script src="imagesloaded.pkgd.min.js"></script>
+    <script src="common.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
         mainimg = $('#pageview img');
         mainlink = $('#pageview img');
         thumbboxes = $('a.thumbbox');
         mainlinkclicked = false;
-        arrowkeyused = false;
 
         // onhashchange == new image requested
         window.onhashchange = function() {
@@ -30,6 +31,11 @@ require "common.php";
             
             mainimg.attr('src', '');
             imagesLoaded(mainimg, function() {
+                // Autoscroll to top of img if on mobile (also see below)
+                if (isMobile.any() && mainlinkclicked) {
+                    $('html, body').animate({scrollTop: $('#pageview').offset().top}, 200);
+                    mainlinkclicked = false;
+                }
                 // Preloading stuffs here
                 var newid = parseInt(location.hash.replace('#', '')) + 1;
                 if (newid <= thumbboxes.length) {
@@ -38,8 +44,9 @@ require "common.php";
             });
             mainimg.attr('src', $('.thumbbox[href="#' + id + '"] img').attr('data-src'));
 
-            // Autoscroll to top page
-            $('html, body').animate({scrollTop: $('html').offset().top}, 200);
+            // Autoscroll to top page only if not mobile
+            if (!isMobile.any())
+                $('html, body').animate({scrollTop: $('html').offset().top}, 200);
         }
         if (location.hash.length <= 0)
             location.hash = '1';
@@ -48,6 +55,7 @@ require "common.php";
 
         // Handles clicking on the current image (advances to next img)
         mainlink.click(function() {
+            mainlinkclicked = true;
             newid = parseInt(location.hash.replace('#', '')) + 1;
             if (newid <= thumbboxes.length) {
                 location.hash = newid;
@@ -103,6 +111,11 @@ require "common.php";
         $('#togglethumbbar').click(function() {
             $('#thumbbar').slideToggle();
         });
+
+        // Switch to mobile CSS if on mobile device
+        if (isMobile.any()) {
+            applyMobileStyle();
+        }
     });
     </script>
 </head>
@@ -160,8 +173,8 @@ foreach ($all_files as $file) {
 </div>
 
 <div id='navbar'>
-<a class='navbtn' id='back' href='<?php echo $script_path; ?>'>^ Back home</a>
-<a class='navbtn' id='togglethumbbar'>Show/hide thumbnails</a>
+<a class='navbtn' id='back' href='index.php'>^ Home</a>
+<a class='navbtn' id='togglethumbbar'>Toggle thumbnails</a>
 <?php
 
 $series_dir = $content_dir . "/" . $series;

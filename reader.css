@@ -1,7 +1,7 @@
 body {
     background-color: #222222;
     color: #CCCCCC;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     /*font-family: sans-serif;*/
     font-family: Verdana, Geneva, sans-serif;
 }
@@ -166,3 +166,4 @@ a:hover {
     animation: bakkinflicker 10s steps(100, start) 0s infinite;
     -webkit-animation: bakkinflicker 10s steps(100, start) 0s infinite;
 }
+

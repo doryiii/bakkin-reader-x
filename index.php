@@ -5,9 +5,11 @@ require "common.php";
 <html>
 <head>
     <title>Bakkin Reader X</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="reader.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="common.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
         $('.serititle').click(function () {
@@ -23,6 +25,13 @@ require "common.php";
         $('#bakkin-img').dblclick(function () {
             location.href='admin.php';
         });
+
+        if (isMobile.any()) {
+            $('.serititle').attr('data-state', 'collapsed');
+            $('.sericontent').hide();
+            $('#banner img[id!="bakkin-img"]').hide();
+            applyMobileStyle();
+        }
     });
     </script>
 </head>

@@ -13,17 +13,6 @@ require "common.php";
 $sec_read = file($secret_file, FILE_IGNORE_NEW_LINES);
 $fixed_secret = $sec_read[0];
 
-function delTree($dir) {
-    // Don't delete the entire application by accident!
-    if ($dir == "") return false;
-
-    $files = array_diff(scandir($dir), array('.','..')); 
-    foreach ($files as $file) { 
-        (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file"); 
-    } 
-    return rmdir($dir); 
-} 
-
 $secret = $_POST["secret"];
 $series = sanitize($_POST["series"]);
 $chapter = sanitize($_POST["chapter"]);

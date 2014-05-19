@@ -80,4 +80,21 @@ function caching_headers($file, $timestamp) {
     }
 }
 
+function list_subdirs($dir) {
+    // sorts alphabetically by default
+    return array_filter(scandir($dir), function($f) use($dir) {
+        return normal_dir($f, $dir); });
+}
+
+function delTree($dir) {
+    // Don't delete the entire application by accident!
+    if ($dir == "") return false;
+
+    $files = array_diff(scandir($dir), array('.','..'));
+    foreach ($files as $file) {
+        (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+}
+
 ?>

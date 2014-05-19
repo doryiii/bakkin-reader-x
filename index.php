@@ -48,18 +48,17 @@ require "common.php";
 <div style='clear:both;'></div>
 
 <?php
-$all_series = scandir($content_dir); // sorts alphabetically by default
+$all_series = list_subdirs($content_dir);
+
 foreach ($all_series as $series) {
-    if (!normal_dir($series, $content_dir)) continue;
     $series_dir = $content_dir . "/" . $series;
 
     echo "<div class='seri'>";
     echo "<div class='serititle' data-state='expanded'>" . $series . "</div>";
     echo "<div class='sericontent' style=''>";
 
-    $all_chapters = scandir($series_dir);
+    $all_chapters = list_subdirs($series_dir);
     foreach ($all_chapters as $chapter) {
-        if (!normal_dir($chapter, $series_dir)) continue;
         $chapter_dir = $series_dir . "/" . $chapter;
 
         echo "<a class='chaplink' href='chapter.php?" .

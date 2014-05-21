@@ -173,7 +173,7 @@ foreach ($all_files as $file) {
 </div>
 
 <div id='navbar'>
-<a class='navbtn' id='back' href='index.php'>^ Home</a>
+<a class='navbtn' id='back' href='./'>^ Home</a>
 <a class='navbtn' id='togglethumbbar'>Toggle thumbnails</a>
 <?php
 

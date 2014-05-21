@@ -4,7 +4,6 @@
     thumb and img caches are in cache/thumbs and cache/imgs, with file names
     consists of sha1 of the path name above, plus ".jpg"
 */
-$script_path = "/reader/";
 $content_dir = "content";
 $thumbcache_dir = "cache/thumbs";
 $imgcache_dir = "cache/imgs";

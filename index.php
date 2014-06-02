@@ -13,11 +13,6 @@ require "common.php";
     <script type="text/javascript">
     $(document).ready(function() {
         $('.serititle').click(function () {
-            if ($(this).attr('data-state') == 'collapsed') {
-                $(this).attr('data-state', 'expanded');
-            } else {
-                $(this).attr('data-state', 'collapsed');
-            }
             $(this).siblings('.sericontent').slideToggle();
             $(this).siblings('.sericontent').filter(':visible').css({'display': 'block'});
         });
@@ -27,9 +22,6 @@ require "common.php";
         });
 
         if (isMobile.any()) {
-            $('.serititle').attr('data-state', 'collapsed');
-            $('.sericontent').hide();
-            $('#banner img[id!="bakkin-img"]').hide();
             applyMobileStyle();
         }
     });

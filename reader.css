@@ -150,12 +150,13 @@ a:hover {
     width: 1px;
     height: 1px;
     position: absolute;
-    left: -1px;
-    bottom: 0px;
-    float:left;
+    left: 1px;
+    bottom: 1px;
+    float: left;
+    opacity: 0.1;
 }
 
-
+/*
 @keyframes bakkinflicker {
     to { visibility: hidden; }
 }
@@ -166,4 +167,4 @@ a:hover {
     animation: bakkinflicker 10s steps(100, start) 0s infinite;
     -webkit-animation: bakkinflicker 10s steps(100, start) 0s infinite;
 }
-
+*/

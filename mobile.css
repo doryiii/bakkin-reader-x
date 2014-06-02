@@ -1,7 +1,10 @@
 body { margin: 3px; }
 #pageview img { margin: 0px; width: 100%; }
+#banner img { display: none; }
+#banner img[id=bakkin-img] { display: inline-block; }
 .seri { float: none; }
 .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
+.sericontent { display: none; }
 .chaplink span { font-size: medium; }
 #banner img[id!=bakkin-img] { display: none; }
 #chapicon { display: none; }

@@ -135,7 +135,7 @@ $icon = $iconcache_dir . "/" . sha1($icon_f) . ".jpg";
 if (!file_exists($icon))
     create_img($content_dir . "/" . $icon_f, $icon, 35, 35);
 
-echo "<span id='chaptitle'>" . $series . "</span>";
+echo "<span id='chaptitle'>" . preg_replace("/^\d* *(.*)$/", "$1", $series) . "</span>";
 echo "<img id='chapicon' src='" . $icon . "'/>";
 echo "<span id='chapchapter'>" . $cur_chap . "</span>";
 ?>

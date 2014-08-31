@@ -28,7 +28,7 @@ require "common.php";
     </script>
 </head>
 <body>
-<div id='pagetitle'><span id='apptitle'>Bakkin Reader X</span><span id='appsubtitle'>By Dory</span></div>
+<div id='pagetitle'><span id='apptitle'>Bakkin Reader X</span><span id='appsubtitle'><a href="/">By Dory</a></span></div>
 <div id='banner'>
 <img src='img/titleb_1.png' />
 <img src='img/titleb_2.png' />

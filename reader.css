@@ -144,6 +144,7 @@ a:hover {
     margin: 5px auto;
     display: block;
     cursor: pointer;
+    box-shadow: 0 0 15px #000000;
 }
 
 #preloader img {

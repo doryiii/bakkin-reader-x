@@ -111,11 +111,6 @@ require "common.php";
         $('#togglethumbbar').click(function() {
             $('#thumbbar').slideToggle();
         });
-
-        // Switch to mobile CSS if on mobile device
-        if (isMobile.any()) {
-            applyMobileStyle();
-        }
     });
     </script>
 </head>
@@ -130,13 +125,16 @@ $dir_explode = array_filter(explode("/", $chap));
 $series = $dir_explode[0];
 $cur_chap = $dir_explode[1];
 
-$icon_f = $series . "/" . $cur_chap . "/thumb.png";
-$icon = $iconcache_dir . "/" . sha1($icon_f) . ".jpg";
-if (!file_exists($icon))
-    create_img($content_dir . "/" . $icon_f, $icon, 35, 35);
-
 echo "<span id='chaptitle'>" . preg_replace("/^\d* *(.*)$/", "$1", $series) . "</span>";
-echo "<img id='chapicon' src='" . $icon . "'/>";
+
+$icon_f = $series . "/" . $cur_chap . "/thumb.png";
+if (file_exists($content_dir . "/" . $icon_f)) {
+    $icon = $iconcache_dir . "/" . sha1($icon_f) . ".jpg";
+    if (!file_exists($icon))
+        create_img($content_dir . "/" . $icon_f, $icon, 35, 35);
+    echo "<img id='chapicon' src='" . $icon . "'/>";
+}
+
 echo "<span id='chapchapter'>" . $cur_chap . "</span>";
 ?>
 <span id='pagenum'></span>

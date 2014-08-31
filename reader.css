@@ -64,27 +64,43 @@ a:hover {
 }
 
 .chaplink {
-    padding-left: 5px;
-    height: 35px;
+    padding: 1px 2px 1px 5px;
     overflow: hidden;
     font-size: 12px;
     display: block;
-    margin: 8px 0px;
+}
+.chaplink table {
+    border-spacing: 0px;
 }
 .chaplink img {
     border: 2px solid gray;
     width: 36px;
     height: 36px;
-    display: inline-block;
+    display: block;
     box-sizing: border-box;
 }
 .chaplink span {
-    position: relative;
-    top: -15px;
-    padding: 10px;
+    padding: 3px 6px;
     display: inline-block;
 }
 
+
+/* Hide all the other banners when screen width is limited
+   Plus other mobile-oriented optimizations */
+#banner img { display: inherit; }
+@media handheld, (max-width: 600px) {
+    #banner img { display: none; }
+    #banner img[id=bakkin-img] { display: inherit; }
+
+    body { margin: 3px; }
+    #pageview img { margin: 0px; width: 100%; }
+    .seri { float: none; }
+    .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
+    .sericontent { display: none; }
+    .chaplink span { font-size: medium; }
+    #chapicon { display: none; }
+    #chaptitle, #chapnumber, #pagenumber { margin: 0px 3px; }
+}
 
 /* Below are mostly for the chapter page */
 

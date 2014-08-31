@@ -25,10 +25,6 @@ $all_series = list_subdirs($content_dir);
     </style>
     <script>
     $(document).ready(function() {
-        if (isMobile.any()) {
-            applyMobileStyle();
-        }
-
         $('#upload input[type="submit"]').click(function() {
             if ($('input[name="secret"]').val() == "" ||
                 $('input[name="chapter"]').val() == "" ||

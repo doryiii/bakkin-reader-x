@@ -19,7 +19,3 @@ var isMobile = {
     }
 };
 
-function applyMobileStyle() {
-    $('head').append('<link rel="stylesheet" href="mobile.css" type="text/css" />');
-}
-

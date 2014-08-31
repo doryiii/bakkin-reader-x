@@ -20,10 +20,6 @@ require "common.php";
         $('#bakkin-img').dblclick(function () {
             location.href='admin.php';
         });
-
-        if (isMobile.any()) {
-            applyMobileStyle();
-        }
     });
     </script>
 </head>
@@ -55,14 +51,16 @@ foreach ($all_series as $series) {
 
         echo "<a class='chaplink' href='chapter.php?" .
              tourl($series . "/" . $chapter) . "'>";
+        echo "<table><tr><td>";
 
         $f = $series . "/" . $chapter . "/thumb.png";
-        $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
-        if (!file_exists($icon))
-            create_img($content_dir . "/" . $f, $icon, 35, 35);
-
-        echo "<img src='" . $icon . "' />" .
-             "<span>" . $chapter . "</span></a>";
+        if (file_exists($content_dir . "/" . $f)) {
+            $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
+            if (!file_exists($icon))
+                create_img($content_dir . "/" . $f, $icon, 35, 35);
+            echo "<img src='" . $icon . "' />" . "</td><td>";
+        }
+        echo "<span>" . $chapter . "</span></td></tr></table></a>";
     }
 
     echo "</div>"; // sericontent

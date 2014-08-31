@@ -52,15 +52,12 @@ $all_series = list_subdirs($content_dir);
         <table>
         <tr><td>Secret</td><td><input type='password' name='secret' /></td></tr>
         <tr><td>Series Name</td><td>
+        <select name='series'>
             <?php
-            $i = 1;
-            foreach ($all_series as $series) {
-                echo "<input type='radio' name='series' id='r_".$i."' value='".
-                     $series."' ".($i==1 ? "checked" : "")."/><label for='r_".
-                     $i."'>".$series."</label><br/>";
-                $i++;
-            }
+            foreach ($all_series as $series)
+                echo "<option value='".$series."' />".$series."</option>";
             ?>
+        </select>
         </td></tr>
         <tr><td>Chapter Name</td><td><input type='text' name='chapter' /></td></tr>
         <tr><td>Zip file (no rar!)</td><td><input type='file' name='file' /></td></tr>

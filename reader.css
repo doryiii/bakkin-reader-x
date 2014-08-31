@@ -56,7 +56,7 @@ a:hover {
 
 .serititle {
     font-weight: bold;
-    padding: 1px 5px;
+    padding: 1px 5px 4px 5px;
     cursor: pointer;
 }
 .serititle:hover {
@@ -64,7 +64,7 @@ a:hover {
 }
 
 .chaplink {
-    padding: 1px 2px 1px 5px;
+    padding: 2px 2px 1px 5px;
     overflow: hidden;
     font-size: 12px;
     display: block;

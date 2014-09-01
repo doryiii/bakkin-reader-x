@@ -49,15 +49,16 @@ a:hover {
 }
 
 .seri {
-    float: left;
-    margin: 10px;
+    margin: 10px 0px;
     border-left: 1px solid gray;
+    width: 200px;
 }
 
 .serititle {
     font-weight: bold;
     padding: 1px 5px 4px 5px;
     cursor: pointer;
+    background-color: #303030;
 }
 .serititle:hover {
     background-color: #555555;
@@ -87,14 +88,16 @@ a:hover {
 
 /* Hide all the other banners when screen width is limited
    Plus other mobile-oriented optimizations */
+.gridsizer { width: 200px; display: none; }
 #banner img { display: inherit; }
-@media handheld, (max-width: 600px) {
+@media handheld, (max-width: 400px) {
     #banner img { display: none; }
     #banner img[id=bakkin-img] { display: inherit; }
 
+    .gridsizer { width: 100%; }
     body { margin: 3px; }
     #pageview img { margin: 0px; width: 100%; }
-    .seri { float: none; }
+    .seri { float: none; width: 100%; margin: 5px 0px; }
     .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
     .sericontent { display: none; }
     .chaplink span { font-size: medium; }

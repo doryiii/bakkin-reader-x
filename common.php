@@ -81,8 +81,17 @@ function caching_headers($file, $timestamp) {
 
 function list_subdirs($dir) {
     // sorts alphabetically by default
-    return array_filter(scandir($dir), function($f) use($dir) {
+    // only returns normal directories (no ., no .., no file)
+    // also, the returned array starts from 0 and there should be no gap
+    $tmp1 = array_filter(scandir($dir), function($f) use($dir) {
         return normal_dir($f, $dir); });
+
+    $tmp2 = array();
+    $i = 0;
+    foreach ($tmp1 as $el)
+        $tmp2[$i++] = $el;
+
+    return $tmp2;
 }
 
 function delTree($dir) {

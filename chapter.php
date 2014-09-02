@@ -176,7 +176,7 @@ foreach ($all_files as $file) {
 <?php
 
 $series_dir = $content_dir . "/" . $series;
-$all_chapters = scandir($series_dir);
+$all_chapters = list_subdirs($series_dir);
 
 $prev = "";
 $next = "";
@@ -184,12 +184,11 @@ $next = "";
 // Look for the current one in the list, and deduce prev/next chapter
 for ($i=0; $i<count($all_chapters); $i++) {
     $chapter = $all_chapters[$i];
-    if (!normal_dir($chapter, $series_dir)) continue;
-
     if ($chapter == $cur_chap)
         break;
     $prev = $chapter;
 }
+
 if ($i < count($all_chapters) - 1)
     $next = $all_chapters[$i+1];
 

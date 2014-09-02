@@ -9,12 +9,15 @@ require "common.php";
     <link rel="icon" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="reader.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="masonry.pkgd.min.js"></script>
     <script src="common.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
         $('.serititle').click(function () {
-            $(this).siblings('.sericontent').slideToggle();
             $(this).siblings('.sericontent').filter(':visible').css({'display': 'block'});
+            $(this).siblings('.sericontent').toggle(0, function () {
+                $('#sericontainer').masonry();
+            });
         });
 
         $('#bakkin-img').dblclick(function () {
@@ -34,6 +37,8 @@ require "common.php";
 <img src='img/titleb_6.png' />
 </div>
 <div style='clear:both;'></div>
+<div id='sericontainer' class="js-masonry" data-masonry-options='{ "columnWidth": ".gridsizer", "itemSelector": ".seri", "transitionDuration": "0", "gutter": 15 }'>
+<div class='gridsizer'>aaa</div>
 
 <?php
 $all_series = list_subdirs($content_dir);
@@ -42,7 +47,18 @@ foreach ($all_series as $series) {
     $series_dir = $content_dir . "/" . $series;
 
     echo "<div class='seri'>";
-    echo "<div class='serititle' data-state='expanded'>" . preg_replace("/^\d* *(.*)$/", "$1", $series) . "</div>";
+    echo "<div class='serititle' data-state='expanded'><table><tr><td>";
+
+    $f = $series . "/thumb.png";
+    if (file_exists($content_dir . "/" . $f)) {
+        $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
+        if (!file_exists($icon))
+            create_img($content_dir . "/" . $f, $icon, 35, 35);
+        echo "<img src='" . $icon . "' />" . "</td><td>";
+    }
+
+    echo "<span>" . preg_replace("/^\d* *(.*)$/", "$1", $series) .
+         "</span></td></tr></table></div>";
     echo "<div class='sericontent' style=''>";
 
     $all_chapters = list_subdirs($series_dir);
@@ -68,6 +84,7 @@ foreach ($all_series as $series) {
 }
 ?>
 
+</div><!--sericontainer-->
 </body>
 </html>
 

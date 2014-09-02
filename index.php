@@ -47,7 +47,18 @@ foreach ($all_series as $series) {
     $series_dir = $content_dir . "/" . $series;
 
     echo "<div class='seri'>";
-    echo "<div class='serititle' data-state='expanded'>" . preg_replace("/^\d* *(.*)$/", "$1", $series) . "</div>";
+    echo "<div class='serititle' data-state='expanded'><table><tr><td>";
+
+    $f = $series . "/thumb.png";
+    if (file_exists($content_dir . "/" . $f)) {
+        $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
+        if (!file_exists($icon))
+            create_img($content_dir . "/" . $f, $icon, 35, 35);
+        echo "<img src='" . $icon . "' />" . "</td><td>";
+    }
+
+    echo "<span>" . preg_replace("/^\d* *(.*)$/", "$1", $series) .
+         "</span></td></tr></table></div>";
     echo "<div class='sericontent' style=''>";
 
     $all_chapters = list_subdirs($series_dir);

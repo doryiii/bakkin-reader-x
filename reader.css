@@ -51,12 +51,12 @@ a:hover {
 .seri {
     margin: 10px 0px;
     border-left: 1px solid gray;
-    width: 200px;
+    width: 236px;
 }
 
 .serititle {
     font-weight: bold;
-    padding: 1px 5px 4px 5px;
+    padding: 1px 5px 1px 5px;
     cursor: pointer;
     background-color: #303030;
 }
@@ -73,7 +73,7 @@ a:hover {
 .chaplink table {
     border-spacing: 0px;
 }
-.chaplink img {
+.chaplink img, .serititle img {
     border: 2px solid gray;
     width: 36px;
     height: 36px;
@@ -88,7 +88,7 @@ a:hover {
 
 /* Hide all the other banners when screen width is limited
    Plus other mobile-oriented optimizations */
-.gridsizer { width: 200px; display: none; }
+.gridsizer { width: 236px; display: none; }
 #banner img { display: inherit; }
 @media handheld, (max-width: 400px) {
     #banner img { display: none; }
@@ -97,7 +97,7 @@ a:hover {
     .gridsizer { width: 100%; }
     body { margin: 3px; }
     #pageview img { margin: 0px; width: 100%; }
-    .seri { float: none; width: 100%; margin: 5px 0px; }
+    .seri { float: none; width: 100%; margin: 2px 0px; }
     .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
     .sericontent { display: none; }
     .chaplink span { font-size: medium; }

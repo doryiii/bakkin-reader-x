@@ -66,6 +66,13 @@ function create_img($orig, $dest, $width, $height) {
     imagejpeg($img_thumb, $dest, 80);
 }
 
+function get_cached($f, $content_dir, $cachedir, $w, $h) {
+    $ret = $cachedir . "/" . sha1($f) . ".jpg";
+    if (!file_exists($ret))
+        create_img($content_dir . "/" . $f, $ret, $w, $h);
+    return $ret;
+}
+
 function caching_headers($file, $timestamp) {
     $gmt_mtime = gmdate('r', $timestamp);
     header('ETag: "'.md5($timestamp.$file).'"');

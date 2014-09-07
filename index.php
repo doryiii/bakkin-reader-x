@@ -51,9 +51,7 @@ foreach ($all_series as $series) {
 
     $f = $series . "/thumb.png";
     if (file_exists($content_dir . "/" . $f)) {
-        $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
-        if (!file_exists($icon))
-            create_img($content_dir . "/" . $f, $icon, 35, 35);
+        $icon = get_cached($f, $content_dir, $iconcache_dir, 35, 35);
         echo "<img src='" . $icon . "' />" . "</td><td>";
     }
 
@@ -71,9 +69,7 @@ foreach ($all_series as $series) {
 
         $f = $series . "/" . $chapter . "/thumb.png";
         if (file_exists($content_dir . "/" . $f)) {
-            $icon = $iconcache_dir . "/" . sha1($f) . ".jpg";
-            if (!file_exists($icon))
-                create_img($content_dir . "/" . $f, $icon, 35, 35);
+            $icon = get_cached($f, $content_dir, $iconcache_dir, 35, 35);
             echo "<img src='" . $icon . "' />" . "</td><td>";
         }
         echo "<span>" . $chapter . "</span></td></tr></table></a>";

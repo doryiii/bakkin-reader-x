@@ -33,7 +33,7 @@ a:hover {
     font-size: small;
     margin: 0px 10px;
 }
-#chapicon {
+#chapicon, #sericon {
     width: 21px;
     height: 21px;
     border: 1px solid gray;
@@ -101,7 +101,7 @@ a:hover {
     .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
     .sericontent { display: none; }
     .chaplink span { font-size: medium; }
-    #chapicon { display: none; }
+    #chapicon, #sericon { display: none; }
     #chaptitle, #chapnumber, #pagenumber { margin: 0px 3px; }
 }
 

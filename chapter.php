@@ -125,13 +125,17 @@ $dir_explode = array_filter(explode("/", $chap));
 $series = $dir_explode[0];
 $cur_chap = $dir_explode[1];
 
+$icon_f = $series . "/thumb.png";
+if (file_exists($content_dir . "/" . $icon_f)) {
+    $icon = get_cached($icon_f, $content_dir, $iconcache_dir, 35, 35);
+    echo "<img id='sericon' src='" . $icon . "'/>";
+}
+
 echo "<span id='chaptitle'>" . preg_replace("/^\d* *(.*)$/", "$1", $series) . "</span>";
 
 $icon_f = $series . "/" . $cur_chap . "/thumb.png";
 if (file_exists($content_dir . "/" . $icon_f)) {
-    $icon = $iconcache_dir . "/" . sha1($icon_f) . ".jpg";
-    if (!file_exists($icon))
-        create_img($content_dir . "/" . $icon_f, $icon, 35, 35);
+    $icon = get_cached($icon_f, $content_dir, $iconcache_dir, 35, 35);
     echo "<img id='chapicon' src='" . $icon . "'/>";
 }
 
@@ -153,10 +157,8 @@ $i = 1;
 foreach ($all_files as $file) {
     $f = $chap . "/" . $file;
 
-    $thumb = $thumbcache_dir . "/" . sha1($f) . ".jpg";
-    if (!file_exists($thumb))
-        create_img($content_dir . "/" . $f, $thumb,
-                   $max_thumb_width, $max_thumb_height);
+    $thumb = get_cached($f, $content_dir, $thumbcache_dir,
+                        $max_thumb_width, $max_thumb_height);
 
     $img = $imgcache_dir . "/" . sha1($f) . ".jpg";
     $imgurl = file_exists($img) ? $img : "img.php?" . $f;

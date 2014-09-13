@@ -31,8 +31,8 @@ require "common.php";
             
             mainimg.attr('src', '');
             imagesLoaded(mainimg, function() {
-                // Autoscroll to top of img if on mobile (also see below)
-                if (isMobile.any() && mainlinkclicked) {
+                // Autoscroll to top of img
+                if (mainlinkclicked) {
                     $('html, body').animate({scrollTop: $('#pageview').offset().top}, 200);
                     mainlinkclicked = false;
                 }
@@ -43,10 +43,6 @@ require "common.php";
                 }
             });
             mainimg.attr('src', $('.thumbbox[href="#' + id + '"] img').attr('data-src'));
-
-            // Autoscroll to top page only if not mobile
-            if (!isMobile.any())
-                $('html, body').animate({scrollTop: $('html').offset().top}, 200);
         }
         if (location.hash.length <= 0)
             location.hash = '1';

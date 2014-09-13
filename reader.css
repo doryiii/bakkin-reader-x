@@ -85,6 +85,7 @@ a:hover {
     display: inline-block;
 }
 
+.sericontent { display: none; }
 
 /* Hide all the other banners when screen width is limited
    Plus other mobile-oriented optimizations */
@@ -99,7 +100,6 @@ a:hover {
     #pageview img { margin: 0px; width: 100%; }
     .seri { float: none; width: 100%; margin: 2px 0px; }
     .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
-    .sericontent { display: none; }
     .chaplink span { font-size: medium; }
     #chapicon, #sericon { display: none; }
     #chaptitle, #chapnumber, #pagenumber { margin: 0px 3px; }

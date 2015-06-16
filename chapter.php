@@ -29,7 +29,8 @@ require "common.php";
             mainlink.attr('data-current', id);
             $('#pagenum').text("pg. " + id);
             
-            mainimg.attr('src', '');
+            mainimg.attr('src', 'img/loading.gif');
+            $('#preloader img').attr('src', 'img/loading.gif')
             imagesLoaded(mainimg, function() {
                 // Autoscroll to top of img
                 if (mainlinkclicked) {
@@ -69,7 +70,7 @@ require "common.php";
         imgLoad.on('progress', function(inst, image) {
             if (!image.isLoaded) {
                 var origsrc = image.img.src;
-                image.img.src = '';
+                image.img.src = 'img/loading.gif';
                 setTimeout(function() {image.img.src = origsrc;}, 1000);
             }
         });

@@ -97,7 +97,7 @@ foreach ($all_series as $series) {
             if (file_exists($img)) {
                 echo "<span class='old'>" . $img . "</span>";
             } else if ($gen_all || ($gen_thumb && $i==0)) {
-                create_img($content_dir . "/" . $f, $img, 1100, 1100);
+                create_img($content_dir . "/" . $f, $img, $max_img_width, $max_img_height);
                 echo "<span class='new'>" . $img . "</span>";
             }
 

@@ -85,13 +85,12 @@ a:hover {
     display: inline-block;
 }
 
-.sericontent { display: none; }
 
 /* Hide all the other banners when screen width is limited
    Plus other mobile-oriented optimizations */
 .gridsizer { width: 236px; display: none; }
 #banner img { display: inherit; }
-@media handheld, (max-width: 400px) {
+@media handheld, (min-resolution: 2dppx), (max-width: 700px), (max-device-width: 700px) {
     #banner img { display: none; }
     #banner img[id=bakkin-img] { display: inherit; }
 
@@ -100,6 +99,7 @@ a:hover {
     #pageview img { margin: 0px; width: 100%; }
     .seri { float: none; width: 100%; margin: 2px 0px; }
     .serititle { border: 1px solid gray; font-size: larger; padding: 5px 5px; }
+    .sericontent { display: none; }
     .chaplink span { font-size: medium; }
     #chapicon, #sericon { display: none; }
     #chaptitle, #chapnumber, #pagenumber { margin: 0px 3px; }

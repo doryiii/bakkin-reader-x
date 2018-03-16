@@ -1,0 +1,141 @@
+<!doctype html>
+<html ng-app="bakkinreader">
+<head>
+    <title>Bakkin Reader X</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="jquery.ba-bbq.js"></script>
+    
+    <link href="main.css" rel="stylesheet"/>
+    
+    <script>
+    // AngularJS stuffs
+    (function(){
+        var app = angular.module("bakkinreader", []);
+        app.controller('mainCtrl', function($scope) {
+        });
+        app.filter('encodeURI', function() {
+            return window.encodeURIComponent;
+        });
+    })();
+    
+    $(document).ready(function() {
+        // More AngularJS stuffs
+        var element = angular.element($("body"));
+        var controller = element.controller();
+        var scope = element.scope();
+        scope.current_series = null;
+        scope.current_chapter = null;
+        
+        // Initial data querying
+        // Trigger hashchange in case people went here with direct hashes
+        $.get("main.php")
+        .done(function(response) { scope.$apply(function() {
+            scope.series = response;
+            setTimeout(() => $(window).trigger('hashchange'), 0);
+        })})
+        .fail(function(response) { scope.$apply(function() {
+            alert("Something went wonky with the reader! Refresh later.");
+        })});
+
+        // The main event listener
+        $(window).on('hashchange', function() {
+            state = $.deparam.fragment(true);
+            scope.$apply(function() {
+                scope.current_chapter = null;
+                scope.current_series = null;
+                
+                if ("series" in state) {
+                    scope.current_series = scope.series[state.series];
+                    scope.current_chapter = null;
+                } else if ("chapter" in state) {
+                    for (let series of scope.series) {
+                        for (let volume of series.volumes) {
+                            for (let chapter of volume.chapters) {
+                                if (chapter.dir == state.chapter) {
+                                    scope.current_series = series;
+                                    scope.current_chapter = chapter;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        scope.$apply();
+    });
+    </script>
+</head>
+<body ng-controller="mainCtrl as c">
+
+<!-- ====================== the landing page ======================= -->
+<div id="all-series" ng-show="current_series == null">
+    <div id="pagetitle">
+        <span id="apptitle">Bakkin Reader X</span>
+        <span id="appsubtitle">By Dory</span>
+    </div>
+
+    <div class="series" ng-repeat="manga in series">
+        <a ng-href="#series={{$index|encodeURI}}" class="cover">
+            <img ng-src="{{manga.thumb}}"/>
+        </a>
+        <a ng-href="#series={{$index|encodeURI}}" class="field title">
+            {{manga.name}}
+        </a>
+        <div class="field author">{{manga.author}}</div>
+        <a ng-href="#chapter={{manga.latest|encodeURI}}"
+           class="field latest">
+            {{manga.latest_name}}
+            <span class="field latest-time">({{manga.latest_time}})</span>
+        </a>
+    </div>
+</div>
+
+<!-- ====================== the series page ======================= -->
+<div id="series-view" ng-show="current_series != null && current_chapter == null">
+    <div id="series-info">
+        <div class="cover"><img ng-src="{{current_series.thumb}}"/></div>
+        <div class="field title">
+            <a href="#">Home</a> &gt; 
+            {{current_series.name}}
+        </div>
+        <div class="field author">{{current_series.author}}</div>
+    </div>
+    
+    <div id="vol-list">
+        <div class="volume" ng-repeat="volume in current_series.volumes">
+            <table style="border-collapse: collapse; width: 100%"><tbody>
+            <tr>
+            <td rowspan="2" style="vertical-align: top; width: 1px">
+                <div class="volume-cover">
+                    <img ng-src="{{volume.thumb}}"/>
+                </div>
+            </td>
+            <td style="vertical-align: top; height: 1px;" class="title">
+                {{volume.name}}
+            </td></tr><tr>
+            <td style="vertical-align:top" class="chap-list">
+                <div class="chapter" ng-repeat="chapter in volume.chapters">
+                    <a ng-href="#chapter={{chapter.dir}}">
+                        {{chapter.name}}
+                        <span class="tooltip">
+                            <img ng-src="{{chapter.thumb}}"/>
+                        </span>
+                    </a>
+                </div>
+            </td>
+            </tr>
+            </tbody></table>
+        </div>
+    </div>
+</div>
+
+<!-- ====================== the chapter page ======================= -->
+<div id="chapter-view" ng-show="current_chapter != null">
+Chapter view
+</div>
+
+<body>
+</html>

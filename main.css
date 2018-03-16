@@ -1,0 +1,154 @@
+body {
+    background-color: #222222;
+    color: #DDDDDD;
+    padding-bottom: 10px;
+    font-family: sans-serif;
+    margin: 0px;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+a:hover {
+    background-color: #555555;
+}
+td, th {
+    padding: 0;
+}
+
+#pagetitle {
+    margin: 0px 0px 10px 0px;
+    padding: 7px 15px 5px 15px;
+    background-color: #333333;
+}
+#apptitle {
+    font-size: larger;
+    font-weight: bold;
+    margin: 0px 10px;
+}
+#appsubtitle {
+    font-size: smaller;
+    font-weight: bolder;
+    font-style: italic;
+    margin: 0px 8px;
+}
+
+.series {
+    box-sizing: border-box;
+    display: block;
+    text-decoration: none;
+    width: 400px;
+    height: 200px;
+    padding: 5px;
+    margin: 5px 15px;
+    float: left;
+}
+.series a {
+    display: block;
+}
+.series .cover img, #series-view .cover img {
+    height: 180px;
+    float: left;
+    border: 2px solid gray;
+    margin-right: 10px;
+    box-shadow: 2px 2px 5px black;
+}
+#series-view .cover img {
+    height: 50px;
+}
+.series .field, #series-view .field {
+    text-shadow: 2px 2px 5px black;
+    padding: 2px 5px 2px 5px;
+}
+.series .title, #series-view .title {
+    border-bottom: 2px solid gray;
+    font-weight: bold;
+    font-size: larger;
+}
+.series .author, .series .latest, .series .latest-time,
+#series-view .author, #series-view .latest, #series-view .latest-time {
+    font-size: small;
+}
+.series .author {
+    margin-bottom: 12px;
+}
+.series .latest-time {
+    font-size: smaller;
+    font-style: italic;
+    color: #AAAAAA;
+}
+.series .author:before, #series-view .author:before {
+    content: "Artist: ";
+    font-style: italic;
+    font-size: smaller;
+    color: #999999;
+}
+.series .latest:before {
+    content: "Latest: ";
+    font-style: italic;
+    font-size: smaller;
+    color: #999999;
+}
+
+.series .cover:hover + .title, .series .title:hover, .series .latest:hover {
+    background-color: #555555;
+}
+
+#series-view #series-info {
+    margin: 5px 5px 10px 10px;
+}
+#series-view #vol-list {
+    clear: both;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.volume {
+    clear: both;
+    padding: 10px;
+}
+.volume-cover img {
+    width: 120px;
+    float: left;
+    border: 1px solid gray;
+    margin: 0px;
+}
+.volume .title {
+    border-bottom: 1px solid gray;
+    font-weight: bold;
+    font-size: medium;
+    padding: 5px 10px 2px 20px;
+}
+.volume .chap-list {
+    padding-left: 10px;
+    padding-top: 5px;
+}
+.volume .chapter {
+    font-size: small;
+}
+.volume .chapter a {
+    display: block;
+    padding: 2px 10px 2px 10px;
+}
+.volume .chapter a .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
+    width: 120px;
+    background-color: #111111;
+    color: #fff;
+    text-align: center;
+    padding: 5px 5px;
+    margin-left: 15px;
+    border-radius: 6px;
+    
+    position: absolute;
+    z-index: 1;
+}
+.volume .chapter a:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.volume .chapter a .tooltip img {
+    width: 120px;
+}

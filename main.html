@@ -14,9 +14,6 @@
         var app = angular.module("bakkinreader", []);
         app.controller('mainCtrl', function($scope) {
         });
-        app.filter('encodeURI', function() {
-            return window.encodeURIComponent;
-        });
     })();
     
     $(document).ready(function() {
@@ -25,7 +22,9 @@
         var controller = element.controller();
         var scope = element.scope();
         scope.current_series = null;
+        scope.current_volume = null;
         scope.current_chapter = null;
+        scope.current_page = null;
         
         // Initial data querying
         // Trigger hashchange in case people went here with direct hashes
@@ -41,26 +40,15 @@
         // The main event listener
         $(window).on('hashchange', function() {
             state = $.deparam.fragment(true);
+
             scope.$apply(function() {
-                scope.current_chapter = null;
-                scope.current_series = null;
-                
-                if ("series" in state) {
-                    scope.current_series = scope.series[state.series];
-                    scope.current_chapter = null;
-                } else if ("chapter" in state) {
-                    for (let series of scope.series) {
-                        for (let volume of series.volumes) {
-                            for (let chapter of volume.chapters) {
-                                if (chapter.dir == state.chapter) {
-                                    scope.current_series = series;
-                                    scope.current_chapter = chapter;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
+                scope.current_series = ("series" in state) ?
+                    scope.series[state.series] : null;
+                scope.current_volume = ("volume" in state) ?
+                    scope.current_series.volumes[state.volume] : null;
+                scope.current_chapter = ("chapter" in state) ?
+                    scope.current_volume.chapters[state.chapter] : null;                
+                scope.current_page = ("page" in state) ? state.page : 0;                
             });
         });
         
@@ -78,14 +66,14 @@
     </div>
 
     <div class="series" ng-repeat="manga in series">
-        <a ng-href="#series={{$index|encodeURI}}" class="cover">
+        <a ng-href="#series={{manga.dir}}" class="cover">
             <img ng-src="{{manga.thumb}}"/>
         </a>
-        <a ng-href="#series={{$index|encodeURI}}" class="field title">
+        <a ng-href="#series={{manga.dir}}" class="field title">
             {{manga.name}}
         </a>
         <div class="field author">{{manga.author}}</div>
-        <a ng-href="#chapter={{manga.latest|encodeURI}}"
+        <a ng-href="#series={{manga.dir}}&volume={{manga.latest_vol}}&chapter={{manga.latest_chap}}"
            class="field latest">
             {{manga.latest_name}}
             <span class="field latest-time">({{manga.latest_time}})</span>
@@ -118,7 +106,7 @@
             </td></tr><tr>
             <td style="vertical-align:top" class="chap-list">
                 <div class="chapter" ng-repeat="chapter in volume.chapters">
-                    <a ng-href="#chapter={{chapter.dir}}">
+                    <a ng-href="#series={{current_series.dir}}&volume={{volume.dir}}&chapter={{chapter.dir}}">
                         {{chapter.name}}
                         <span class="tooltip">
                             <img ng-src="{{chapter.thumb}}"/>

@@ -53,6 +53,7 @@ function getList() {
         $all_volumes = list_subdirs(prefixDir($series_dir));
         $volumes = [];
         $last_chapter = null;
+        $last_volume = null;
         $last_chapter_name = null;
         $last_chapter_time = 0;
         foreach ($all_volumes as $volume) {
@@ -66,7 +67,8 @@ function getList() {
                 if (filemtime(prefixDir($chapter_dir)) > $last_chapter_time) {
                     $last_chapter_time = filemtime(prefixDir($chapter_dir));
                     $last_chapter_name = $chapter_info[0];
-                    $last_chapter = $chapter_dir;
+                    $last_chapter = $chapter;
+                    $last_volume = $volume;
                 }
 
                 $chapter_files = scandir(prefixDir($chapter_dir));
@@ -81,33 +83,34 @@ function getList() {
                         return prefixDir($chapter_dir . "/" . $d);},
                     $chapter_pages));
 
-                array_push($chapters, [
-                    "dir" => $chapter_dir,
+                $chapters[$chapter] = [
+                    "dir" => $chapter,
                     "name" => $chapter_info[0] ? trim($chapter_info[0]) : $chapter,
                     "thumb" => $chapter_pages[0],
                     "pages" => $chapter_pages
-                ]);
+                ];
             }
             
-            array_push($volumes, [
-                "dir" => $volume_dir,
+            $volumes[$volume] = [
+                "dir" => $volume,
                 "name" => $volume,
                 "thumb" => ifExist(prefixDir($volume_dir . "/thumb.png")),
                 "chapters" => $chapters
-            ]);
+            ];
             
         }
         
-        array_push($series, [
+        $series[$series_dir] = [
             "dir" => $series_dir,
             "name" => trim($series_info[0]),
             "author" => trim($series_info[1]),
             "thumb" => end($volumes)["thumb"],
-            "latest" => $last_chapter,
-            "latest_name" => $last_chapter_name,
+            "latest_vol" => $last_volume,
+            "latest_chap" => $last_chapter,
+            "latest_name" => trim($last_chapter_name),
             "latest_time" => date("Y-m-d", $last_chapter_time),
             "volumes" => $volumes
-        ]);
+        ];
     }
     
     return $series;

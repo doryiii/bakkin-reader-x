@@ -9,28 +9,102 @@
     <link href="main.css" rel="stylesheet"/>
     
     <script>
-    // AngularJS stuffs
+    // AngularJS glue
     (function(){
         var app = angular.module("bakkinreader", []);
         app.controller('mainCtrl', function($scope) {
+            
         });
     })();
     
+    function get_prev_chapter(scope) {
+        var vol_i = scope.current_series.volmap[scope.current_volume.dir];
+        var chap_i = scope.current_volume.chapmap[scope.current_chapter.dir];
+        var vol = null;
+        var chap = null;
+        var page = null;
+        
+        if (chap_i > 0) {
+            vol = scope.current_volume;
+            chap = vol.chapters[chap_i - 1];
+            page = chap.pages[chap.pages.length - 1];
+        } else if (vol_i > 0) {
+            vol = scope.current_series.volumes[vol_i - 1];
+            chap = vol.chapters[vol.chapters.length - 1];
+            page = chap.pages[chap.pages.length - 1];
+        }
+        return {"volume": vol, "chapter": chap, "page": page};
+    }
+
+    function get_next_chapter(scope) {
+        var vol_i = scope.current_series.volmap[scope.current_volume.dir];
+        var chap_i = scope.current_volume.chapmap[scope.current_chapter.dir];
+        var vol = null;
+        var chap = null;
+        
+        if (chap_i < scope.current_volume.chapters.length - 1) {
+            vol = scope.current_volume;
+            chap = vol.chapters[chap_i + 1];
+        } else if (vol_i < scope.current_series.volumes.length - 1) {
+            vol = scope.current_series.volumes[vol_i + 1];
+            chap = vol.chapters[0];
+        }
+        return {"volume": vol, "chapter": chap, "page": 0};
+    }
+    
+    function get_prev_page(scope) {
+        if (scope.current_page > 0) {
+            return {"volume": scope.current_volume,
+                    "chapter": scope.current_chapter,
+                    "page": scope.current_page - 1};
+        } else {
+            return get_prev_chapter(scope);
+        }
+    }
+
+    function get_next_page(scope) {
+        if (scope.current_page < scope.current_chapter.pages.length - 1) {
+            return {"volume": scope.current_volume,
+                    "chapter": scope.current_chapter,
+                    "page": scope.current_page + 1};
+        } else {
+            return get_next_chapter(scope);
+        }
+    }
+    
     $(document).ready(function() {
-        // More AngularJS stuffs
+        // More AngularJS glue
         var element = angular.element($("body"));
         var controller = element.controller();
         var scope = element.scope();
         scope.current_series = null;
         scope.current_volume = null;
         scope.current_chapter = null;
-        scope.current_page = null;
+        scope.current_page = 0;
         
         // Initial data querying
         // Trigger hashchange in case people went here with direct hashes
         $.get("main.php")
         .done(function(response) { scope.$apply(function() {
             scope.series = response;
+            
+            // build the map from volume/chapter dir -> index
+            // the whole purpose of this is readable and persistent URLs
+            // ...#series=OMRK&volume=vol02&chapter=ch20, instead of
+            // ...#series=1&volume=2&chapter=22
+            for (let manga in scope.series) {
+                scope.series[manga]["volmap"] = [];
+                scope.series[manga].volumes.forEach(function (vol, i) {
+                    scope.series[manga].volmap[vol.dir] = i;
+                    
+                    vol["chapmap"] = [];
+                    vol.chapters.forEach(function (chap, j) {
+                        vol.chapmap[chap.dir] = j;
+                    });
+                });
+            }
+            
+            // go to the hash people passed in URL, if any
             setTimeout(() => $(window).trigger('hashchange'), 0);
         })})
         .fail(function(response) { scope.$apply(function() {
@@ -42,13 +116,42 @@
             state = $.deparam.fragment(true);
 
             scope.$apply(function() {
+                // series
                 scope.current_series = ("series" in state) ?
                     scope.series[state.series] : null;
-                scope.current_volume = ("volume" in state) ?
-                    scope.current_series.volumes[state.volume] : null;
-                scope.current_chapter = ("chapter" in state) ?
-                    scope.current_volume.chapters[state.chapter] : null;                
-                scope.current_page = ("page" in state) ? state.page : 0;                
+
+                // volume
+                if ("series" in state && "volume" in state) {
+                    scope.current_volume_i = scope.current_series.volmap
+                                                [state.volume];
+                    scope.current_volume = scope.current_series.volumes
+                                                [scope.current_volume_i];
+                } else {
+                    scope.current_volume = null;
+                    scope.current_volume_i = null;
+                }
+                
+                // chapter
+                if ("series" in state && "volume" in state &&
+                    "chapter" in state) {
+                    scope.current_chapter_i = scope.current_volume.chapmap
+                                                [state.chapter];
+                    scope.current_chapter = scope.current_volume.chapters
+                                                [scope.current_chapter_i];
+
+                    // page
+                    scope.current_page = ("page" in state) ? state.page : 0;                
+
+                    // next/previous page/chapter
+                    scope.next_chapter = get_next_chapter(scope);
+                    scope.prev_chapter = get_prev_chapter(scope);
+                    scope.next_page = get_next_page(scope);
+                    scope.prev_page = get_prev_page(scope);
+
+                } else {
+                    scope.current_chapter = null;
+                    scope.current_chapter_i = null;
+                }
             });
         });
         
@@ -109,7 +212,7 @@
                     <a ng-href="#series={{current_series.dir}}&volume={{volume.dir}}&chapter={{chapter.dir}}">
                         {{chapter.name}}
                         <span class="tooltip">
-                            <img ng-src="{{chapter.thumb}}"/>
+                            <img ng-src="{{chapter.pages[0]}}"/>
                         </span>
                     </a>
                 </div>
@@ -122,7 +225,30 @@
 
 <!-- ====================== the chapter page ======================= -->
 <div id="chapter-view" ng-show="current_chapter != null">
-Chapter view
+    <div id="chapter-info">
+        <span id="homelink"><a ng-href="#">Home</a></span>
+        <img id="series-thumb" ng-src="{{current_series.thumb}}"/>
+        <span id="series-title"><a ng-href="#series={{current_series.dir}}">
+            {{current_series.name}}</a>
+        </span>
+        <img id="chapter-thumb"
+             ng-if="current_chapter.thumb != ''"
+             ng-src="{{current_chapter.thumb}}"/>
+        <span id="chapter-title">{{current_chapter.name}}</span>
+        <span id="pagenum">pg. {{current_page + 1}}</span>
+    </div>
+    
+    <div id="navbar">
+        <a class="navbtn" id="togglethumbbar">Thumbnails</a>
+        <a class="navbtn" id="prev" ng-show="prev_chapter.chapter"
+           ng-href="#series={{current_series.dir}}&volume={{prev_chapter.volume.dir}}&chapter={{prev_chapter.chapter.dir}}">
+            &lt;&lt; {{prev_chapter.chapter.name}}
+        </a>
+        <a class="navbtn" id="next" ng-show="next_chapter.chapter"
+           ng-href="#series={{current_series.dir}}&volume={{next_chapter.volume.dir}}&chapter={{next_chapter.chapter.dir}}">
+            {{next_chapter.chapter.name}} &gt;&gt;
+        </a>
+    </div>
 </div>
 
 <body>

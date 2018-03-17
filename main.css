@@ -20,6 +20,7 @@ td, th {
     margin: 0px 0px 10px 0px;
     padding: 7px 15px 5px 15px;
     background-color: #333333;
+    box-shadow: 2px 2px 8px black;
 }
 #apptitle {
     font-size: larger;
@@ -112,12 +113,14 @@ td, th {
     float: left;
     border: 1px solid gray;
     margin: 0px;
+    box-shadow: 2px 2px 5px black;
 }
 .volume .title {
     border-bottom: 1px solid gray;
     font-weight: bold;
     font-size: medium;
     padding: 5px 10px 2px 20px;
+    text-shadow: 2px 2px 5px black;
 }
 .volume .chap-list {
     padding-left: 10px;
@@ -151,4 +154,43 @@ td, th {
 }
 .volume .chapter a .tooltip img {
     width: 120px;
+}
+
+#chapter-view {
+    padding: 5px;
+}
+#series-thumb, #chapter-thumb {
+    height: 21px;
+    vertical-align: top;
+    border: 1px solid gray;
+    box-sizing: border-box;
+}
+#series-title a, #homelink a {
+    font-size: large;
+    font-weight: bold;
+    padding: 1px 8px;
+    display: inline-block;
+}
+#chapter-title {
+    font-size: smaller;
+    font-weight: bolder;
+    font-style: italic;
+    margin: 0px 6px;
+}
+#pagenum {
+    font-size: small;
+    margin: 0px 6px;
+}
+#navbar {
+    margin: 3px;
+}
+.navbtn {
+    border: 2px solid gray;
+    display: inline-block;
+    padding: 2px;
+    font-size: small;
+    text-decoration: none;
+    color: inherit;
+    margin: 1px;
+    cursor: pointer;
 }

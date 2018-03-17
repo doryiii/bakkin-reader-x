@@ -36,12 +36,14 @@ function ifExist($file) {
 }
 
 /* ========================= main =================================*/
-/* TODO: One potential optimization here is to load each series only
+/* NOTE: One potential optimization here is to load each series only
  * when queried, instead of loading all series like this.
- * TODO: Another one is probably to load the list of chapter pages
+ * NOTE: Another one is probably to load the list of chapter pages
  * only when needed.
  * This works for Bakkin, since we only have a couple of series,
- * but obviously wouldn't work for bigger manga reader sites */
+ * but obviously wouldn't work for bigger manga reader sites 
+ * TODO: factorize all the $_dir's
+ */
 function getList() {
     $series_dirs = list_subdirs(CONTENT_DIR);
 
@@ -83,20 +85,21 @@ function getList() {
                         return prefixDir($chapter_dir . "/" . $d);},
                     $chapter_pages));
 
-                $chapters[$chapter] = [
+                array_push($chapters, [
                     "dir" => $chapter,
                     "name" => $chapter_info[0] ? trim($chapter_info[0]) : $chapter,
-                    "thumb" => $chapter_pages[0],
+                    "thumb" => ifExist(prefixDir($chapter_dir . "/thumb.png")) ?
+                                prefixDir($chapter_dir . "/thumb.png") : "",
                     "pages" => $chapter_pages
-                ];
+                ]);
             }
             
-            $volumes[$volume] = [
+            array_push($volumes, [
                 "dir" => $volume,
                 "name" => $volume,
                 "thumb" => ifExist(prefixDir($volume_dir . "/thumb.png")),
                 "chapters" => $chapters
-            ];
+            ]);
             
         }
         

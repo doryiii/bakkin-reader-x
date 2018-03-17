@@ -194,3 +194,35 @@ td, th {
     margin: 1px;
     cursor: pointer;
 }
+
+#pageview {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+}
+#pageview #img-container {
+    display: inline-block;
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+#pageview img {
+    max-height: 1800px;
+}
+#pageview #left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 50%;
+    bottom: 0;
+}
+#pageview #right {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+}
+#pageview #right:hover, #pageview #left:hover {
+    background-color: inherit;
+}

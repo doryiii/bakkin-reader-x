@@ -78,7 +78,8 @@ function getList() {
                     $chapter_files,
                     function($f) use($chapter_dir) {
                         return is_file(prefixDir($chapter_dir . "/" . $f)) &&
-                               (endsWith($f, ".png") || endsWith($f, ".jpg"));
+                               (endsWith($f, ".png") || endsWith($f, ".jpg")) &&
+                               $f != "thumb.png";
                     });
                 $chapter_pages = array_values(array_map(
                     function($d) use($chapter_dir){

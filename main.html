@@ -2,6 +2,8 @@
 <html ng-app="bakkinreader">
 <head>
     <title>Bakkin Reader X</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <link rel="icon" href="favicon.png" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="jquery.ba-bbq.js"></script>
@@ -13,65 +15,83 @@
     (function(){
         var app = angular.module("bakkinreader", []);
         app.controller('mainCtrl', function($scope) {
-            
+            $scope.getNextNextImg = function() {
+                if ($scope.next_page.chapter) {
+                    var next_page = get_next_page($scope.current_series,
+                                                $scope.next_page.volume,
+                                                $scope.next_page.chapter,
+                                                $scope.next_page.page);
+                    if (next_page.page)
+                        return next_page.chapter.pages[next_page.page];
+                }
+                return null;
+            }
         });
     })();
     
-    function get_prev_chapter(scope) {
-        var vol_i = scope.current_series.volmap[scope.current_volume.dir];
-        var chap_i = scope.current_volume.chapmap[scope.current_chapter.dir];
+    function get_prev_chapter(series, volume, chapter) {
+        var vol_i = series.volmap[volume.dir];
+        var chap_i = volume.chapmap[chapter.dir];
         var vol = null;
         var chap = null;
         var page = null;
         
         if (chap_i > 0) {
-            vol = scope.current_volume;
+            vol = volume;
             chap = vol.chapters[chap_i - 1];
             page = chap.pages.length - 1;
         } else if (vol_i > 0) {
-            vol = scope.current_series.volumes[vol_i - 1];
+            vol = series.volumes[vol_i - 1];
             chap = vol.chapters[vol.chapters.length - 1];
             page = chap.pages.length - 1;
         }
         return {"volume": vol, "chapter": chap, "page": page};
     }
 
-    function get_next_chapter(scope) {
-        var vol_i = scope.current_series.volmap[scope.current_volume.dir];
-        var chap_i = scope.current_volume.chapmap[scope.current_chapter.dir];
+    function get_next_chapter(series, volume, chapter) {
+        var vol_i = series.volmap[volume.dir];
+        var chap_i = volume.chapmap[chapter.dir];
         var vol = null;
         var chap = null;
         
-        if (chap_i < scope.current_volume.chapters.length - 1) {
-            vol = scope.current_volume;
+        if (chap_i < volume.chapters.length - 1) {
+            vol = volume;
             chap = vol.chapters[chap_i + 1];
-        } else if (vol_i < scope.current_series.volumes.length - 1) {
-            vol = scope.current_series.volumes[vol_i + 1];
+        } else if (vol_i < series.volumes.length - 1) {
+            vol = series.volumes[vol_i + 1];
             chap = vol.chapters[0];
         }
         return {"volume": vol, "chapter": chap, "page": 0};
     }
     
-    function get_prev_page(scope) {
-        if (scope.current_page > 0) {
-            return {"volume": scope.current_volume,
-                    "chapter": scope.current_chapter,
-                    "page": scope.current_page - 1};
+    function get_prev_page(series, volume, chapter, page) {
+        if (page > 0) {
+            return {"volume": volume,
+                    "chapter": chapter,
+                    "page": page - 1};
         } else {
-            return get_prev_chapter(scope);
+            return get_prev_chapter(series, volume, chapter);
         }
     }
 
-    function get_next_page(scope) {
-        if (scope.current_page < scope.current_chapter.pages.length - 1) {
-            return {"volume": scope.current_volume,
-                    "chapter": scope.current_chapter,
-                    "page": scope.current_page + 1};
+    function get_next_page(series, volume, chapter, page) {
+        if (page < chapter.pages.length - 1) {
+            return {"volume": volume,
+                    "chapter": chapter,
+                    "page": page + 1};
         } else {
-            return get_next_chapter(scope);
+            return get_next_chapter(series, volume, chapter);
         }
     }
     
+    function imgDone() {
+        $("#pageview img").attr("src", $("#currentimg").attr("src"));
+        $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
+    }
+    function preloadDone() {
+        $("#nextimg2").attr("src", $("#nextimg").attr("data-next"));
+    }
+
     $(document).ready(function() {
         // More AngularJS glue
         var element = angular.element($("body"));
@@ -121,17 +141,25 @@
             
             // left
             if (e.keyCode == 37) {
-                location.hash = "#m=" + scope.current_series.dir +
-                                "&v=" + scope.prev_page.volume.dir +
-                                "&c=" + scope.prev_page.chapter.dir +
-                                "&p=" + scope.prev_page.page;
+                if (scope.prev_page.chapter) {
+                    location.hash = "#m=" + scope.current_series.dir +
+                                    "&v=" + scope.prev_page.volume.dir +
+                                    "&c=" + scope.prev_page.chapter.dir +
+                                    "&p=" + scope.prev_page.page;
+                } else {
+                    location.hash = "#";
+                }
                 return false;
             // right
             } else if (e.keyCode == 39) {
-                location.hash = "#m=" + scope.current_series.dir +
-                                "&v=" + scope.next_page.volume.dir +
-                                "&c=" + scope.next_page.chapter.dir +
-                                "&p=" + scope.next_page.page;
+                if (scope.next_page.chapter) {
+                    location.hash = "#m=" + scope.current_series.dir +
+                                    "&v=" + scope.next_page.volume.dir +
+                                    "&c=" + scope.next_page.chapter.dir +
+                                    "&p=" + scope.next_page.page;
+                } else {
+                    location.hash = "#";
+                }
                 return false;
             }
             
@@ -142,6 +170,7 @@
         // The main event listener
         $(window).on('hashchange', function() {
             state = $.deparam.fragment(true);
+            $("#pageview img").attr("src", "loading.png");
 
             scope.$apply(function() {
                 // series
@@ -166,13 +195,23 @@
                                                 [scope.current_chapter_i];
 
                     // page
-                    scope.current_page = ("p" in state) ? state.p : 0;                
+                    scope.current_page = ("p" in state) ? state.p : 0;
 
                     // next/previous page/chapter
-                    scope.next_chapter = get_next_chapter(scope);
-                    scope.prev_chapter = get_prev_chapter(scope);
-                    scope.next_page = get_next_page(scope);
-                    scope.prev_page = get_prev_page(scope);
+                    scope.next_chapter = get_next_chapter(scope.current_series,
+                                                    scope.current_volume,
+                                                    scope.current_chapter);
+                    scope.prev_chapter = get_prev_chapter(scope.current_series,
+                                                    scope.current_volume,
+                                                    scope.current_chapter);
+                    scope.next_page = get_next_page(scope.current_series,
+                                                    scope.current_volume,
+                                                    scope.current_chapter,
+                                                    scope.current_page);
+                    scope.prev_page = get_prev_page(scope.current_series,
+                                                    scope.current_volume,
+                                                    scope.current_chapter,
+                                                    scope.current_page);
 
                 } else {
                     scope.current_chapter = null;
@@ -261,11 +300,11 @@
              ng-if="current_chapter.thumb != ''"
              ng-src="{{current_chapter.thumb}}"/>
         <span id="chapter-title">{{current_chapter.name}}</span>
-        <span id="pagenum">pg. {{current_page + 1}}</span>
+        <span id="pagenum">pg. {{current_page}}</span>
     </div>
     
     <div id="navbar">
-        <a class="navbtn" id="togglethumbbar">Thumbnails</a>
+        <!--<a class="navbtn" id="togglethumbbar">Thumbnails</a>-->
         <a class="navbtn" id="prev" ng-show="prev_chapter.chapter"
            ng-href="#m={{current_series.dir}}&v={{prev_chapter.volume.dir}}&c={{prev_chapter.chapter.dir}}">
             &lt;&lt; {{prev_chapter.chapter.name}}
@@ -278,7 +317,7 @@
     
     <div id="pageview">
         <div id="img-container">
-            <img ng-src="{{current_chapter.pages[current_page]}}"/>
+            <img />
             <a id="left"
                ng-href="#m={{current_series.dir}}&v={{prev_page.volume.dir}}&c={{prev_page.chapter.dir}}&p={{prev_page.page}}">
             </a>
@@ -287,6 +326,19 @@
             </a>
         </div>
     </div>
+</div>
+
+<!-- TODO: better preloader -->
+<!-- TODO: replace "loading" image -->
+<div id="preloader">
+    <img ng-src="{{current_chapter.pages[current_page]}}"
+         onload="imgDone()"
+         data-next="{{next_page.chapter.pages[next_page.page]}}"
+         id="currentimg"/>
+    <img id="nextimg"
+         onload="preloadDone()"
+         data-next="{{next_page ? getNextNextImg() : null}}"/>
+    <img id="nextimg2"/>
 </div>
 
 <body>

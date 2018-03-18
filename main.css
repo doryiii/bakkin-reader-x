@@ -226,3 +226,8 @@ td, th {
 #pageview #right:hover, #pageview #left:hover {
     background-color: inherit;
 }
+#preloader img {
+    width: 1px;
+    height: 1px;
+    opacity: 0.01;
+}

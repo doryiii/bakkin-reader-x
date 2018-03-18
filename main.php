@@ -28,9 +28,6 @@ function sanitize($str) {
     return $str;
 }
 
-function prefixDir($dir) {
-    return CONTENT_DIR . "/" . $dir;
-}
 function ifExist($file) {
     return file_exists($file) ? $file : "";
 }
@@ -50,47 +47,47 @@ function getList() {
     $series = [];
 
     foreach ($series_dirs as $series_dir) {
-        $series_info = file(prefixDir($series_dir . "/SERIESINFO"));
+        $series_info = file(CONTENT_DIR . "/" . $series_dir . "/SERIESINFO");
         
-        $all_volumes = list_subdirs(prefixDir($series_dir));
+        $all_volumes = list_subdirs(CONTENT_DIR . "/" . $series_dir);
         $volumes = [];
         $last_chapter = null;
         $last_volume = null;
         $last_chapter_name = null;
         $last_chapter_time = 0;
         foreach ($all_volumes as $volume) {
-            $volume_dir = $series_dir . "/" . $volume;
+            $volume_dir = CONTENT_DIR . "/" . $series_dir . "/" . $volume;
 
             $chapters = [];
-            $all_chapters = list_subdirs(prefixDir($volume_dir));
+            $all_chapters = list_subdirs($volume_dir);
             foreach ($all_chapters as $chapter) {
                 $chapter_dir = $volume_dir . "/" . $chapter;
-                $chapter_info = file(prefixDir($chapter_dir . "/CHAPTERINFO"));
-                if (filemtime(prefixDir($chapter_dir)) > $last_chapter_time) {
-                    $last_chapter_time = filemtime(prefixDir($chapter_dir));
+                $chapter_info = file($chapter_dir . "/CHAPTERINFO");
+                if (filemtime($chapter_dir) > $last_chapter_time) {
+                    $last_chapter_time = filemtime($chapter_dir);
                     $last_chapter_name = $chapter_info[0];
                     $last_chapter = $chapter;
                     $last_volume = $volume;
                 }
 
-                $chapter_files = scandir(prefixDir($chapter_dir));
+                $chapter_files = scandir($chapter_dir);
                 $chapter_pages = array_filter(
                     $chapter_files,
                     function($f) use($chapter_dir) {
-                        return is_file(prefixDir($chapter_dir . "/" . $f)) &&
+                        return is_file($chapter_dir . "/" . $f) &&
                                (endsWith($f, ".png") || endsWith($f, ".jpg")) &&
                                $f != "thumb.png";
                     });
                 $chapter_pages = array_values(array_map(
                     function($d) use($chapter_dir){
-                        return prefixDir($chapter_dir . "/" . $d);},
+                        return $chapter_dir . "/" . $d;},
                     $chapter_pages));
 
                 array_push($chapters, [
                     "dir" => $chapter,
                     "name" => $chapter_info[0] ? trim($chapter_info[0]) : $chapter,
-                    "thumb" => ifExist(prefixDir($chapter_dir . "/thumb.png")) ?
-                                prefixDir($chapter_dir . "/thumb.png") : "",
+                    "thumb" => ifExist($chapter_dir . "/thumb.png") ?
+                                ($chapter_dir . "/thumb.png") : "",
                     "pages" => $chapter_pages
                 ]);
             }
@@ -98,7 +95,7 @@ function getList() {
             array_push($volumes, [
                 "dir" => $volume,
                 "name" => $volume,
-                "thumb" => ifExist(prefixDir($volume_dir . "/thumb.png")),
+                "thumb" => ifExist($volume_dir . "/thumb.png"),
                 "chapters" => $chapters
             ]);
             

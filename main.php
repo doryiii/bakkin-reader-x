@@ -14,7 +14,7 @@ const IMG_HEIGHT = 1500;
 
 function create_img($orig, $dest, $width, $height) {
     list($orig_width, $orig_height) = getimagesize($orig);
-    
+
     // Make sure to keep image ratio
     $ratio = $orig_width/$orig_height;
     if ($width/$height > $ratio) {
@@ -22,14 +22,14 @@ function create_img($orig, $dest, $width, $height) {
     } else {
         $height = $width / $ratio;
     }
-    
+
     // Load the original image and create an img obj for the thumbnail
     if (endsWith($orig, ".png")) {
         $img_orig = imagecreatefrompng($orig);
     } elseif (endsWith($orig, ".jpg") || endsWith($orig, ".jpeg")) {
         $img_orig = imagecreatefromjpeg($orig);
     }
-    
+
     // Only downsize, don't expand
     if ($width < $orig_width || $height < $orig_height) {
         $img_thumb = imagecreatetruecolor($width, $height);
@@ -38,7 +38,7 @@ function create_img($orig, $dest, $width, $height) {
     } else {
         $img_thumb = $img_orig;
     }
-    
+
     imageinterlace($img_thumb, true);
     if (!file_exists(dirname($dest)))
         mkdir(dirname($dest), 0777, true);
@@ -52,7 +52,7 @@ function list_subdirs($dir) {
     // only returns normal directories (no ., no .., no file)
     return array_values(array_filter(scandir($dir),
                                      function($f) use($dir) {
-                                         return normal_dir($f, $dir); 
+                                         return normal_dir($f, $dir);
                                      }));
 }
 
@@ -98,7 +98,7 @@ function getList() {
 
     foreach ($series_dirs as $series_dir) {
         $series_info = file(dirOf($series_dir . "/SERIESINFO"));
-        
+
         $all_volumes = list_subdirs(dirOf($series_dir));
         $volumes = [];
         $last_chapter = null;
@@ -108,7 +108,7 @@ function getList() {
         foreach ($all_volumes as $volume) {
             $volume_dir = $series_dir . "/" . $volume;
             $volume_info = file(dirOf($volume_dir . "/VOLUMEINFO"));
-            
+
             $chapters = [];
             $all_chapters = list_subdirs(dirOf($volume_dir));
             foreach ($all_chapters as $chapter) {
@@ -138,7 +138,7 @@ function getList() {
                     function($d) use($chapter_dir) {
                         return thumbOf($chapter_dir . "/" . $d);},
                     $chapter_pages));
-                    
+
                 array_push($chapters, [
                     "dir" => $chapter,
                     "name" => $chapter_name,
@@ -148,7 +148,7 @@ function getList() {
                     "thumbs" => $chapter_thumbs,
                 ]);
             }
-            
+
             array_push($volumes, [
                 "dir" => $volume,
                 "name" => $volume_info ? trim($volume_info[0]) : $volume,
@@ -156,9 +156,9 @@ function getList() {
                 "thumb_large" => imgOf($volume_dir . "/thumb.png"),
                 "chapters" => $chapters
             ]);
-            
+
         }
-        
+
         $series[$series_dir] = [
             "dir" => $series_dir,
             "name" => trim($series_info[0]),
@@ -175,7 +175,7 @@ function getList() {
             "volumes" => $volumes
         ];
     }
-    
+
     return $series;
 }
 

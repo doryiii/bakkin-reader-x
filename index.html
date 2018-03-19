@@ -8,9 +8,9 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-cookies.js"></script>
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="jquery.ba-bbq.js"></script>
-    
+
     <link href="reader.css" rel="stylesheet"/>
-    
+
     <script>
     // AngularJS glue
     (function(){
@@ -29,7 +29,7 @@
                 }
                 return null;
             };
-            
+
             // cookie stuffs
             $scope.set_progress = function() {
                 if ($scope.current_volume && $scope.current_chapter) {
@@ -42,16 +42,16 @@
             };
         });
     })();
-    
+
     // Helpers
-    
+
     function get_prev_chapter(series, volume, chapter) {
         var vol_i = series.volmap[volume.dir];
         var chap_i = volume.chapmap[chapter.dir];
         var vol = null;
         var chap = null;
         var page = null;
-        
+
         if (chap_i > 0) {
             vol = volume;
             chap = vol.chapters[chap_i - 1];
@@ -69,7 +69,7 @@
         var chap_i = volume.chapmap[chapter.dir];
         var vol = null;
         var chap = null;
-        
+
         if (chap_i < volume.chapters.length - 1) {
             vol = volume;
             chap = vol.chapters[chap_i + 1];
@@ -79,7 +79,7 @@
         }
         return {"volume": vol, "chapter": chap, "page": 0};
     }
-    
+
     function get_prev_page(series, volume, chapter, page) {
         if (page > 0) {
             return {"volume": volume,
@@ -99,20 +99,20 @@
             return get_next_chapter(series, volume, chapter);
         }
     }
-    
+
 //     function is_cached(img_url) {
 //         var imgEle = document.createElement("img");
 //         imgEle.src = img_url;
 //         return imgEle.complete && (imgEle.width + imgEle.height) > 0;
 //     }
-    
+
     function imgDone(page) {
         $("#pageview img").attr("src", $("#currentimg").attr("src"));
         $("#pageview img").attr("onload",
             '$("#pageview #img-container").width($("#pageview img").width())');
         $("#pageview img").removeClass("preview");
         $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
-        
+
         var state = $.deparam.fragment(true);
         if ("p" in state && state.p != "0" && state.p != 0)
             $('html, body').animate(
@@ -134,7 +134,7 @@
         scope.current_volume = null;
         scope.current_chapter = null;
         scope.current_page = 0;
-        
+
         // Initial data querying
         // Trigger hashchange in case people went here with direct hashes
         $.get("main.php")
@@ -149,14 +149,14 @@
                 scope.series[manga]["volmap"] = [];
                 scope.series[manga].volumes.forEach(function (vol, i) {
                     scope.series[manga].volmap[vol.dir] = i;
-                    
+
                     vol["chapmap"] = [];
                     vol.chapters.forEach(function (chap, j) {
                         vol.chapmap[chap.dir] = j;
                     });
                 });
             }
-            
+
             // go to the hash people passed in URL, if any
             setTimeout(() => $(window).trigger('hashchange'), 0);
         })})
@@ -167,11 +167,11 @@
         // Handle arrow keys (prev/next img)
         $(document).keydown(function(e){
             var scope = angular.element($("body")).scope();
-            
+
             // don't wanna handle any event with modifier keys
             if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)
                 return true;
-            
+
             // left
             if (e.keyCode == 37) {
                 if (scope.prev_page.chapter) {
@@ -195,15 +195,15 @@
                 }
                 return false;
             }
-            
+
             // don't handle any other key
             return true;
         });
-        
+
         // The main event listener, handles window hash changes
         $(window).on('hashchange', function() {
             state = $.deparam.fragment(true);
-                        
+
             // series
             scope.current_series = ("m" in state) ?
                 scope.series[state.m] : null;
@@ -216,25 +216,25 @@
                 scope.current_volume = null;
                 scope.current_volume_i = null;
             }
-            
+
             // chapter
             if ("m" in state && "v" in state && "c" in state) {
                 scope.current_chapter_i = scope.current_volume.chapmap[state.c];
                 scope.current_chapter = scope.current_volume.chapters
                     [scope.current_chapter_i];
-                
+
                 // page
                 scope.current_page = ("p" in state) ? state.p : 0;
                 scope.set_progress();
-                
+
                 // use the thumbnail as the temporary image while loading
 //               if (!is_cached(scope.current_chapter.pages[scope.current_page])) {
                 $("#pageview img").attr("onload", "");
                 $("#pageview img").attr("src",
-                    scope.current_chapter.thumbs[scope.current_page]);  
+                    scope.current_chapter.thumbs[scope.current_page]);
                 $("#pageview img").addClass("preview");
 //               }
-                
+
                 // next/previous page/chapter
                 scope.next_chapter = get_next_chapter(scope.current_series,
                                                       scope.current_volume,
@@ -250,15 +250,15 @@
                                                 scope.current_volume,
                                                 scope.current_chapter,
                                                 scope.current_page);
-                
+
             } else {
                 scope.current_chapter = null;
                 scope.current_chapter_i = null;
             }
-            
+
             scope.$apply();
         });
-        
+
         scope.$apply();
     });
     </script>
@@ -317,7 +317,7 @@
         </div>
         <div class="field author">{{current_series.author}}</div>
     </div>
-    
+
     <div id="vol-list">
         <div class="volume" ng-repeat="volume in current_series.volumes">
             <table style="border-collapse: collapse; width: 100%"><tbody>
@@ -375,9 +375,9 @@
             {{next_chapter.chapter.name}} &gt;&gt;
         </a>
     </div>
-    
+
     <div id="scrollmark" style="height:1px"></div>
-    
+
     <div id="thumbbar">
         <a class="thumbbox" ng-repeat="thumb in current_chapter.thumbs"
            data-id="{{$index}}" data-current="{{current_page==$index ? 'yes' : ''}}"
@@ -385,7 +385,7 @@
            <img class="thumbview" ng-src="{{thumb}}""/>
         </a>
     </div>
-    
+
     <!-- TODO: images for the prev/next links -->
     <div id="pageview">
         <div id="img-container">

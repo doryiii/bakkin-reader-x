@@ -405,12 +405,20 @@
     <div id="pageview">
         <div id="img-container">
             <img />
-            <a id="left" ng-show="prev_page.chapter"
+            <a id="left" ng-if="prev_page.chapter"
                ng-href="#m={{current_series.dir}}&v={{prev_page.volume.dir}}&c={{prev_page.chapter.dir}}&p={{prev_page.page}}">
             </a>
-            <a id="right" ng-show="next_page.chapter"
+            <a id="left" ng-if="!prev_page.chapter"
+               ng-href="#m={{current_series.dir}}">
+            </a>
+
+            <a id="right" ng-if="next_page.chapter"
                ng-href="#m={{current_series.dir}}&v={{next_page.volume.dir}}&c={{next_page.chapter.dir}}&p={{next_page.page}}">
             </a>
+            <a id="right" ng-if="!next_page.chapter"
+               ng-href="#m={{current_series.dir}}">
+            </a>
+
         </div>
     </div>
 </div>

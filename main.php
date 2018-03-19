@@ -4,12 +4,15 @@ date_default_timezone_set('America/Los_Angeles');
 /* ====================== constants ===============================*/
 const CONTENT_DIR = "content";
 const THUMB_DIR = "thumbs";
-const THUMB_WIDTH = 200;
-const THUMB_HEIGHT = 200;
+const THUMB_WIDTH = 180;
+const THUMB_HEIGHT = 180;
+const IMG_DIR = "resizes";
+const IMG_WIDTH = 1800;
+const IMG_HEIGHT = 1500;
 
 /* ==================== helper funcs ==============================*/
 
-function create_img($orig, $dest, $width=THUMB_WIDTH, $height=THUMB_HEIGHT) {
+function create_img($orig, $dest, $width, $height) {
     list($orig_width, $orig_height) = getimagesize($orig);
     
     // Make sure to keep image ratio
@@ -73,8 +76,16 @@ function thumbOf($file) {
         return null;
     $thumb_file = THUMB_DIR . "/" . $file;
     if (!file_exists($thumb_file))
-        create_img(dirOf($file), $thumb_file);
+        create_img(dirOf($file), $thumb_file, THUMB_WIDTH, THUMB_HEIGHT);
     return $thumb_file;
+}
+function imgOf($file) {
+    if (!file_exists(dirOf($file)))
+        return null;
+    $img_file = IMG_DIR . "/" . $file;
+    if (!file_exists($img_file))
+        create_img(dirOf($file), $img_file, IMG_WIDTH, IMG_HEIGHT);
+    return $img_file;
 }
 function dirOf($file) {
     return CONTENT_DIR . "/" . $file;
@@ -129,7 +140,7 @@ function getList() {
                     }));
                 $chapter_page_links = array_values(array_map(
                     function($d) use($chapter_dir) {
-                        return dirOf($chapter_dir . "/" . $d);},
+                        return imgOf($chapter_dir . "/" . $d);},
                     $chapter_pages));
                 $chapter_thumbs = array_values(array_map(
                     function($d) use($chapter_dir) {
@@ -150,6 +161,7 @@ function getList() {
                 "dir" => $volume,
                 "name" => $volume_info ? trim($volume_info[0]) : $volume,
                 "thumb" => thumbOf($volume_dir . "/thumb.png"),
+                "thumb_large" => imgOf($volume_dir . "/thumb.png"),
                 "chapters" => $chapters
             ]);
             
@@ -163,6 +175,7 @@ function getList() {
             "buy_from" => trim($series_info[3]),
             "buy_link" => trim($series_info[4]),
             "thumb" => end($volumes)["thumb"],
+            "thumb_large" => end($volumes)["thumb_large"],
             "latest_vol" => $last_volume,
             "latest_chap" => $last_chapter,
             "latest_name" => trim($last_chapter_name),

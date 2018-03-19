@@ -2,10 +2,11 @@
 <html ng-app="bakkinreader">
 <head>
     <title>Bakkin Reader X</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
     <link rel="icon" href="favicon.png" />
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-cookies.js"></script>
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="jquery.ba-bbq.js"></script>
     
     <link href="reader.css" rel="stylesheet"/>
@@ -13,8 +14,10 @@
     <script>
     // AngularJS glue
     (function(){
-        var app = angular.module("bakkinreader", []);
-        app.controller('mainCtrl', function($scope) {
+        var app = angular.module("bakkinreader", ["ngCookies"]);
+        app.controller('mainCtrl', function($scope, $cookies) {
+
+            // TODO: This is a very strange-looking hack...
             $scope.getNextNextImg = function() {
                 if ($scope.next_page.chapter) {
                     var next_page = get_next_page($scope.current_series,
@@ -26,8 +29,21 @@
                 }
                 return null;
             };
+            
+            // cookie stuffs
+            $scope.set_progress = function() {
+                if ($scope.current_volume && $scope.current_chapter) {
+                    $cookies.put("prog" + $scope.current_series.dir,
+                                 location.hash);
+                }
+            };
+            $scope.get_progress = function(seriesdir) {
+                return $cookies.get("prog" + seriesdir);
+            };
         });
     })();
+    
+    // Helpers
     
     function get_prev_chapter(series, volume, chapter) {
         var vol_i = series.volmap[volume.dir];
@@ -84,13 +100,22 @@
         }
     }
     
+//     function is_cached(img_url) {
+//         var imgEle = document.createElement("img");
+//         imgEle.src = img_url;
+//         return imgEle.complete && (imgEle.width + imgEle.height) > 0;
+//     }
+    
     function imgDone(page) {
         $("#pageview img").attr("src", $("#currentimg").attr("src"));
         $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
         var state = $.deparam.fragment(true);
         if ("p" in state && state.p != "0" && state.p != 0)
-            $('html, body').animate({scrollTop: $('#scrollmark').offset().top},
-                                    200);
+            $('html, body').animate(
+                {scrollTop: $('#scrollmark').offset().top}, 200);
+        else
+            $('html, body').animate(
+                {scrollTop: $('#chapter-view').offset().top}, 200);
     }
     function preloadDone() {
         $("#nextimg2").attr("src", $("#nextimg").attr("data-next"));
@@ -111,7 +136,7 @@
         $.get("main.php")
         .done(function(response) { scope.$apply(function() {
             scope.series = response;
-            
+
             // build the map from volume/chapter dir -> index
             // the whole purpose of this is readable and persistent URLs
             // ...#m=OMRK&v=vol02&c=ch20, instead of
@@ -176,57 +201,62 @@
             return true;
         });
         
-        // The main event listener
+        // The main event listener, handles window hash changes
         $(window).on('hashchange', function() {
             state = $.deparam.fragment(true);
-            $("#pageview img").attr("src", "loading.png");
-
-            scope.$apply(function() {
-                // series
-                scope.current_series = ("m" in state) ?
-                    scope.series[state.m] : null;
-                // volume
-                if ("m" in state && "v" in state) {
-                    scope.current_volume_i = scope.current_series.volmap
-                                                [state.v];
-                    scope.current_volume = scope.current_series.volumes
-                                                [scope.current_volume_i];
-                } else {
-                    scope.current_volume = null;
-                    scope.current_volume_i = null;
-                }
+                        
+            // series
+            scope.current_series = ("m" in state) ?
+                scope.series[state.m] : null;
+            // volume
+            if ("m" in state && "v" in state) {
+                scope.current_volume_i = scope.current_series.volmap[state.v];
+                scope.current_volume = scope.current_series.volumes
+                    [scope.current_volume_i];
+            } else {
+                scope.current_volume = null;
+                scope.current_volume_i = null;
+            }
+            
+            // chapter
+            if ("m" in state && "v" in state && "c" in state) {
+                scope.current_chapter_i = scope.current_volume.chapmap[state.c];
+                scope.current_chapter = scope.current_volume.chapters
+                    [scope.current_chapter_i];
                 
-                // chapter
-                if ("m" in state && "v" in state && "c" in state) {
-                    scope.current_chapter_i = scope.current_volume.chapmap
-                                                [state.c];
-                    scope.current_chapter = scope.current_volume.chapters
-                                                [scope.current_chapter_i];
-
-                    // page
-                    scope.current_page = ("p" in state) ? state.p : 0;
-
-                    // next/previous page/chapter
-                    scope.next_chapter = get_next_chapter(scope.current_series,
-                                                    scope.current_volume,
-                                                    scope.current_chapter);
-                    scope.prev_chapter = get_prev_chapter(scope.current_series,
-                                                    scope.current_volume,
-                                                    scope.current_chapter);
-                    scope.next_page = get_next_page(scope.current_series,
-                                                    scope.current_volume,
-                                                    scope.current_chapter,
-                                                    scope.current_page);
-                    scope.prev_page = get_prev_page(scope.current_series,
-                                                    scope.current_volume,
-                                                    scope.current_chapter,
-                                                    scope.current_page);
-
-                } else {
-                    scope.current_chapter = null;
-                    scope.current_chapter_i = null;
-                }
-            });
+                // page
+                scope.current_page = ("p" in state) ? state.p : 0;
+                scope.set_progress();
+                
+                // use the thumbnail as the temporary image while loading
+//               if (!is_cached(scope.current_chapter.pages[scope.current_page])) {
+                $("#pageview img").attr("onload", "");
+                $("#pageview img").attr("src",
+                    scope.current_chapter.thumbs[scope.current_page]);  
+//               }
+                
+                // next/previous page/chapter
+                scope.next_chapter = get_next_chapter(scope.current_series,
+                                                      scope.current_volume,
+                                                      scope.current_chapter);
+                scope.prev_chapter = get_prev_chapter(scope.current_series,
+                                                      scope.current_volume,
+                                                      scope.current_chapter);
+                scope.next_page = get_next_page(scope.current_series,
+                                                scope.current_volume,
+                                                scope.current_chapter,
+                                                scope.current_page);
+                scope.prev_page = get_prev_page(scope.current_series,
+                                                scope.current_volume,
+                                                scope.current_chapter,
+                                                scope.current_page);
+                
+            } else {
+                scope.current_chapter = null;
+                scope.current_chapter_i = null;
+            }
+            
+            scope.$apply();
         });
         
         scope.$apply();
@@ -244,7 +274,8 @@
 
     <div class="series" ng-repeat="manga in series">
         <a ng-href="#m={{manga.dir}}" class="cover">
-            <img ng-src="{{manga.thumb}}"/>
+            <img class="thumbsmall" ng-src="{{manga.thumb}}"/>
+            <img class="thumblarge" ng-src="{{manga.thumb_large}}"/>
         </a>
         <a ng-href="#m={{manga.dir}}" class="field title">
             {{manga.name}}
@@ -253,17 +284,20 @@
             {{manga.author}}
         </div>
 
-        <a ng-href="#m={{manga.dir}}&v={{manga.latest_vol}}&c={{manga.latest_chap}}"
-           class="field latest">
-            {{manga.latest_name}}
-            <span class="field latest-time">({{manga.latest_time}})</span>
-        </a>
         <span class="field status">{{manga.status}}</span>
         <a ng-href="{{manga.buy_link}}" ng-if="manga.buy_link"
            class="field buy">
             {{manga.buy_from}}
         </a>
-
+        <a ng-href="#m={{manga.dir}}&v={{manga.latest_vol}}&c={{manga.latest_chap}}"
+           class="field latest">
+            {{manga.latest_name}}
+            <span class="field latest-time">({{manga.latest_time}})</span>
+        </a>
+        <a ng-if="get_progress(manga.dir)" ng-href="{{get_progress(manga.dir)}}"
+           class="field progress">
+            Continue where you left off
+        </a>
     </div>
 </div>
 
@@ -272,7 +306,8 @@
     <div id="series-info">
         <div class="cover"><img ng-src="{{current_series.thumb}}"/></div>
         <div class="field title">
-            <a href="#">Home</a> &gt; 
+            <a href="#" class="homelink">Home</a>
+            <span class="homelink_after"> &gt;</span>
             {{current_series.name}}
         </div>
         <div class="field author">{{current_series.author}}</div>

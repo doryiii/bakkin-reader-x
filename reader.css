@@ -58,17 +58,24 @@ td, th {
 #series-view .cover img {
     height: 50px;
 }
+.series .cover img.thumblarge {
+    display: none;
+}
 .series .field, #series-view .field {
     text-shadow: 2px 2px 5px black;
     padding: 2px 5px 2px 5px;
 }
-.series .title, #series-view .title {
+.series .title {
     border-bottom: 2px solid gray;
     font-weight: bold;
     font-size: larger;
 }
+.series a {
+    font-style: italic;
+    font-weight: bold;
+}
 .series .author, .series .latest, .series .latest-time, .series .buy,
-.series .status,
+.series .status, .series .progress,
 #series-view .author, #series-view .latest, #series-view .latest-time {
     font-size: small;
     display: block;
@@ -78,31 +85,39 @@ td, th {
 }
 .series .latest-time {
     font-size: smaller;
+    font-weight: normal;
     font-style: italic;
     color: #AAAAAA;
+}
+.series .progress {
+    margin-top: 12px;
 }
 .series .author:before, #series-view .author:before {
     content: "Artist: ";
     font-style: italic;
     font-size: smaller;
+    font-weight: normal;
     color: #999999;
 }
 .series .buy:before {
     content: "Buy from ";
     font-style: italic;
     font-size: smaller;
+    font-weight: normal;
     color: #999999;    
 }
 .series .status:before {
     content: "Status: ";
     font-style: italic;
     font-size: smaller;
+    font-weight: normal;
     color: #999999;
 }
 .series .latest:before {
     content: "Latest: ";
     font-style: italic;
     font-size: smaller;
+    font-weight: normal;
     color: #999999;
 }
 
@@ -113,6 +128,16 @@ td, th {
 /* =========================== Series view ============================ */
 #series-view #series-info {
     margin: 5px 5px 10px 10px;
+}
+#series-view .title {
+    border-bottom: 2px solid gray;
+    font-weight: bold;
+    font-size: larger;
+}
+#series-view .homelink_after {
+    content: " >";
+    font-weight: normal;
+    font-size: smaller;
 }
 #series-view #vol-list {
     clear: both;
@@ -219,9 +244,6 @@ td, th {
     font-size: small;
     margin: 0px 6px;
 }
-#navbar {
-    margin: 3px;
-}
 #thumbbar {
     display: none;
     margin: 1px 3px 6px 3px;
@@ -256,6 +278,9 @@ td, th {
     font-weight: bold;
     text-decoration: none;
     display: block;
+}
+#navbar {
+    margin: 3px;
 }
 .navbtn {
     border: 2px solid gray;
@@ -305,4 +330,80 @@ td, th {
     width: 1px;
     height: 1px;
     opacity: 0.01;
+}
+
+/* =========================== Mobile overrides ============================ */
+@media handheld, (min-resolution: 2dppx), (max-width: 700px), (max-device-width: 700px) {
+    .series .cover img.thumblarge {
+        display: inherit;
+    }
+    .series .cover img.thumbsmall {
+        display: none;
+    }
+    
+    /* --- */
+    #series-view .homelink {
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: #111111;
+        border: 1px solid gray;
+    }
+    #vol-list {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        padding: 0px !important;
+    }
+    .volume-cover img {
+        width: 70px !important;
+    }
+    .volume .title {
+        padding-left: 10px;
+        padding-right: 0px;
+    }
+    .volume .chap-list {
+        padding-left: 0px;
+    }
+    .volume .chapter {
+        border-bottom: 1px solid #303030;
+    }
+    .volume .chapter a {
+        padding-right: 0px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+    .volume .chapter a + .tooltip {
+        display: none !important;
+    }
+    
+    /* --- */
+    #chapter-view {
+        padding: 2px !important;
+    }
+    #navbar {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    #pageview img {
+        width: 100%;
+    }
+    #series-thumb, #chapter-thumb {
+        display: none;
+    }
+    #series-title a, #homelink a, .navbtn {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 1px;
+        padding-top: 3px;
+        background-color: #111111;
+        border: 1px solid gray;
+        font-size: small;
+    }
+    #chapter-title {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    #pagenum {
+        margin-left: 1px;
+        margin-right: 0px;
+    }
 }

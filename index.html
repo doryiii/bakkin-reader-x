@@ -108,7 +108,11 @@
     
     function imgDone(page) {
         $("#pageview img").attr("src", $("#currentimg").attr("src"));
+        $("#pageview img").attr("onload",
+            '$("#pageview #img-container").width($("#pageview img").width())');
+        $("#pageview img").removeClass("preview");
         $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
+        
         var state = $.deparam.fragment(true);
         if ("p" in state && state.p != "0" && state.p != 0)
             $('html, body').animate(
@@ -160,11 +164,6 @@
             alert("Something went wonky with the reader! Refresh later.");
         })});
 
-        // Show/hide thumbnail bar
-        $('#togglethumbbar').click(function() {
-            $('#thumbbar').slideToggle();
-        });
-        
         // Handle arrow keys (prev/next img)
         $(document).keydown(function(e){
             var scope = angular.element($("body")).scope();
@@ -233,6 +232,7 @@
                 $("#pageview img").attr("onload", "");
                 $("#pageview img").attr("src",
                     scope.current_chapter.thumbs[scope.current_page]);  
+                $("#pageview img").addClass("preview");
 //               }
                 
                 // next/previous page/chapter
@@ -298,6 +298,11 @@
            class="field progress">
             Continue where you left off
         </a>
+        <a ng-if="!get_progress(manga.dir)"
+           ng-href="#m={{manga.dir}}&v={{manga.volumes[0].dir}}&c={{manga.volumes[0].chapters[0].dir}}"
+           class="field begin">
+            Start reading
+        </a>
     </div>
 </div>
 
@@ -342,7 +347,7 @@
 </div>
 
 <!-- ====================== the chapter page ======================= -->
-<div id="chapter-view" ng-show="current_chapter != null">
+<div id="chapter-view" ng-if="current_chapter != null">
     <div id="chapter-info">
         <span id="homelink"><a ng-href="#">Home</a></span>
         <img id="series-thumb" ng-src="{{current_series.thumb}}"/>
@@ -355,9 +360,12 @@
         <span id="chapter-title">{{current_chapter.name}}</span>
         <span id="pagenum">pg. {{current_page}}</span>
     </div>
-    
+
     <div id="navbar">
-        <a class="navbtn" id="togglethumbbar">Thumbnails</a>
+        <a class="navbtn" id="togglethumbbar"
+           onclick="$('#thumbbar').slideToggle()">
+           Thumbnails
+        </a>
         <a class="navbtn" id="prev" ng-show="prev_chapter.chapter"
            ng-href="#m={{current_series.dir}}&v={{prev_chapter.volume.dir}}&c={{prev_chapter.chapter.dir}}">
             &lt;&lt; {{prev_chapter.chapter.name}}

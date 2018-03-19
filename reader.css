@@ -53,30 +53,27 @@ td, th {
     float: left;
     border: 2px solid gray;
     margin-right: 10px;
-    box-shadow: 2px 2px 5px black;
-}
-#series-view .cover img {
-    height: 50px;
+    box-shadow: 1px 1px 3px black;
 }
 .series .cover img.thumblarge {
     display: none;
 }
 .series .field, #series-view .field {
-    text-shadow: 2px 2px 5px black;
+    text-shadow: 1px 1px 3px black;
     padding: 2px 5px 2px 5px;
 }
 .series .title {
     border-bottom: 2px solid gray;
     font-weight: bold;
     font-size: larger;
+    font-style: normal;
 }
 .series a {
     font-style: italic;
     font-weight: bold;
 }
 .series .author, .series .latest, .series .latest-time, .series .buy,
-.series .status, .series .progress,
-#series-view .author, #series-view .latest, #series-view .latest-time {
+.series .status, .series .progress, .series .begin {
     font-size: small;
     display: block;
 }
@@ -89,7 +86,7 @@ td, th {
     font-style: italic;
     color: #AAAAAA;
 }
-.series .progress {
+.series .progress, .series .begin {
     margin-top: 12px;
 }
 .series .author:before, #series-view .author:before {
@@ -129,10 +126,17 @@ td, th {
 #series-view #series-info {
     margin: 5px 5px 10px 10px;
 }
+#series-view .cover img {
+    height: 50px;
+}
 #series-view .title {
     border-bottom: 2px solid gray;
     font-weight: bold;
     font-size: larger;
+}
+#series-view .author {
+    font-size: small;
+    display: block;
 }
 #series-view .homelink_after {
     content: " >";
@@ -154,14 +158,14 @@ td, th {
     float: left;
     border: 1px solid gray;
     margin: 0px;
-    box-shadow: 2px 2px 5px black;
+    box-shadow: 1px 1px 3px black;
 }
 .volume .title {
     border-bottom: 1px solid gray;
     font-weight: bold;
     font-size: medium;
     padding: 5px 10px 2px 20px;
-    text-shadow: 2px 2px 5px black;
+    text-shadow: 1px 1px 3px black;
 }
 .volume .chap-list {
     padding-left: 10px;
@@ -239,10 +243,12 @@ td, th {
     font-weight: bolder;
     font-style: italic;
     margin: 0px 6px;
+    display: inline-block;
 }
 #pagenum {
     font-size: small;
     margin: 0px 6px;
+    display: inline-block;
 }
 #thumbbar {
     display: none;
@@ -309,6 +315,9 @@ td, th {
     max-width: 1800px;
     box-shadow: 0 0 15px black;
 }
+#pageview img.preview {
+    width: 100%;
+}
 #pageview #left {
     position: absolute;
     top: 0;
@@ -334,6 +343,13 @@ td, th {
 
 /* =========================== Mobile overrides ============================ */
 @media handheld, (min-resolution: 2dppx), (max-width: 700px), (max-device-width: 700px) {
+    .series {
+        float: none;
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding: 10px;
+    }
     .series .cover img.thumblarge {
         display: inherit;
     }
@@ -347,6 +363,9 @@ td, th {
         padding-right: 5px;
         background-color: #111111;
         border: 1px solid gray;
+    }
+    #series-view #series-info {
+        margin-left: 3px;
     }
     #vol-list {
         margin-left: 0px !important;
@@ -367,7 +386,7 @@ td, th {
         border-bottom: 1px solid #303030;
     }
     .volume .chapter a {
-        padding-right: 0px;
+        padding-right: 3px;
         padding-top: 4px;
         padding-bottom: 4px;
     }
@@ -383,8 +402,8 @@ td, th {
         margin-left: 0px;
         margin-right: 0px;
     }
-    #pageview img {
-        width: 100%;
+    #pageview #img-container, #pageview img {
+        width: 100% !important;
     }
     #series-thumb, #chapter-thumb {
         display: none;

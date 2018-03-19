@@ -56,16 +56,8 @@ function list_subdirs($dir) {
                                      }));
 }
 
-function startsWith($haystack, $needle) {
-    return $needle === "" || strpos($haystack, $needle) === 0;
-}
 function endsWith($haystack, $needle) {
     return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
-}
-function sanitize($str) {
-    if ($str == ".." || startsWith($str, "../") || endsWith($str, "/..") || strpos($str, '/../') !== false)
-        exit(1);
-    return $str;
 }
 
 function ifExist($file) {

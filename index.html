@@ -106,23 +106,27 @@
 //         return imgEle.complete && (imgEle.width + imgEle.height) > 0;
 //     }
 
-    function imgDone(page) {
-        $("#pageview img").attr("src", $("#currentimg").attr("src"));
-        $("#pageview img").attr("onload",
-            '$("#pageview #img-container").width($("#pageview img").width())');
-        $("#pageview img").removeClass("preview");
-        $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
+    function imgDone() {
+        var preloader = $("#preloader img");
+        var viewer = $("#pageview img");
+        
+        // If the preloader is loading the main image, then move the img to
+        // the main viewer, then setup viewport size for next page previewer
+        if (preloader.attr("data-type") == "current") {
+            viewer.attr("src", preloader.attr("src"));
+            viewer.attr("onload", '$("#pageview #img-container")' + 
+                                  '.width($("#pageview img").width())');
+            viewer.removeClass("preview");
+            preloader.attr("data-type", "preload");
+        }
 
-        var state = $.deparam.fragment(true);
-        if ("p" in state && state.p != "0" && state.p != 0)
-            $('html, body').animate(
-                {scrollTop: $('#scrollmark').offset().top}, 200);
-        else
-            $('html, body').animate(
-                {scrollTop: $('#chapter-view').offset().top}, 200);
-    }
-    function preloadDone() {
-        $("#nextimg2").attr("src", $("#nextimg").attr("data-next"));
+        // Set up preloading of the next page
+        if (preloader.attr("data-next") != "") {
+            var url = preloader.attr("data-next");
+            preloader.attr("data-next", preloader.attr("data-next-next"));
+            preloader.attr("data-next-next", "");
+            preloader.attr("src", url);
+        }
     }
 
     $(document).ready(function() {
@@ -227,14 +231,6 @@
                 scope.current_page = ("p" in state) ? state.p : 0;
                 scope.set_progress();
 
-                // use the thumbnail as the temporary image while loading
-//               if (!is_cached(scope.current_chapter.pages[scope.current_page])) {
-                $("#pageview img").attr("onload", "");
-                $("#pageview img").attr("src",
-                    scope.current_chapter.thumbs[scope.current_page]);
-                $("#pageview img").addClass("preview");
-//               }
-
                 // next/previous page/chapter
                 scope.next_chapter = get_next_chapter(scope.current_series,
                                                       scope.current_volume,
@@ -257,6 +253,26 @@
             }
 
             scope.$apply();
+            
+            if ("m" in state && "v" in state && "c" in state) {
+                // Prepare the preloader. Display the thumb img while loading
+                // Putting here since it needs Angular to populate the DOM
+                $("#preloader img").attr("data-type", "current");
+                $("#pageview img").attr("onload", "");
+                $("#pageview img").attr("src",
+                                        scope.current_chapter.thumbs[scope.current_page]);
+                $("#pageview img").addClass("preview");
+                
+                // Scroll to the top of the page, or the image, depending on
+                // whether we're on the first page of the chapter or not.
+                var state = $.deparam.fragment(true);
+                if ("p" in state && state.p != "0" && state.p != 0)
+                    $('html, body').animate(
+                        {scrollTop: $('#scrollmark').offset().top}, 200);
+                    else
+                        $('html, body').animate(
+                            {scrollTop: $('#chapter-view').offset().top}, 200);
+            }
         });
 
         scope.$apply();
@@ -381,7 +397,7 @@
         <a class="thumbbox" ng-repeat="thumb in current_chapter.thumbs"
            data-id="{{$index}}" data-current="{{current_page==$index ? 'yes' : ''}}"
            ng-href="#m={{current_series.dir}}&v={{current_volume.dir}}&c={{current_chapter.dir}}&p={{$index}}">
-           <img class="thumbview" ng-src="{{thumb}}""/>
+           <img class="thumbview" ng-src="{{thumb}}"/>
         </a>
     </div>
 
@@ -399,17 +415,12 @@
     </div>
 </div>
 
-<!-- TODO: better preloader -->
-<!-- TODO: replace "loading" image -->
 <div id="preloader">
     <img ng-src="{{current_chapter.pages[current_page]}}"
          onload="imgDone()"
-         data-next="{{next_page.chapter.pages[next_page.page]}}"
-         id="currentimg"/>
-    <img id="nextimg"
-         onload="preloadDone()"
-         data-next="{{next_page ? getNextNextImg() : null}}"/>
-    <img id="nextimg2"/>
+         data-type="current"
+         data-next="{{next_page.chapter ? next_page.chapter.pages[next_page.page] : ''}}"
+         data-next-next="{{next_page ? getNextNextImg() : ''}}"/>
 </div>
 
 <body>

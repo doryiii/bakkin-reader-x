@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="jquery.ba-bbq.js"></script>
     
-    <link href="main.css" rel="stylesheet"/>
+    <link href="reader.css" rel="stylesheet"/>
     
     <script>
     // AngularJS glue
@@ -89,7 +89,7 @@
         $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
         var state = $.deparam.fragment(true);
         if ("p" in state && state.p != "0" && state.p != 0)
-            $('html, body').animate({scrollTop: $('#pageview').offset().top},
+            $('html, body').animate({scrollTop: $('#scrollmark').offset().top},
                                     200);
     }
     function preloadDone() {
@@ -135,6 +135,11 @@
             alert("Something went wonky with the reader! Refresh later.");
         })});
 
+        // Show/hide thumbnail bar
+        $('#togglethumbbar').click(function() {
+            $('#thumbbar').slideToggle();
+        });
+        
         // Handle arrow keys (prev/next img)
         $(document).keydown(function(e){
             var scope = angular.element($("body")).scope();
@@ -290,8 +295,8 @@
                     <a ng-href="#m={{current_series.dir}}&v={{volume.dir}}&c={{chapter.dir}}">
                         {{chapter.name}}
                     </a>
-                    <span class="tooltip" ng-if="chapter.thumb">
-                        <img ng-src="{{chapter.thumb}}"/>
+                    <span class="tooltip">
+                        <img ng-src="{{chapter.thumbs[0]}}"/>
                     </span>
                 </div>
             </td>
@@ -302,7 +307,7 @@
 </div>
 
 <!-- ====================== the chapter page ======================= -->
-<div id="chapter-view" ng-if="current_chapter != null">
+<div id="chapter-view" ng-show="current_chapter != null">
     <div id="chapter-info">
         <span id="homelink"><a ng-href="#">Home</a></span>
         <img id="series-thumb" ng-src="{{current_series.thumb}}"/>
@@ -317,7 +322,7 @@
     </div>
     
     <div id="navbar">
-        <!--<a class="navbtn" id="togglethumbbar">Thumbnails</a>-->
+        <a class="navbtn" id="togglethumbbar">Thumbnails</a>
         <a class="navbtn" id="prev" ng-show="prev_chapter.chapter"
            ng-href="#m={{current_series.dir}}&v={{prev_chapter.volume.dir}}&c={{prev_chapter.chapter.dir}}">
             &lt;&lt; {{prev_chapter.chapter.name}}
@@ -325,6 +330,16 @@
         <a class="navbtn" id="next" ng-show="next_chapter.chapter"
            ng-href="#m={{current_series.dir}}&v={{next_chapter.volume.dir}}&c={{next_chapter.chapter.dir}}">
             {{next_chapter.chapter.name}} &gt;&gt;
+        </a>
+    </div>
+    
+    <div id="scrollmark" style="height:1px"></div>
+    
+    <div id="thumbbar">
+        <a class="thumbbox" ng-repeat="thumb in current_chapter.thumbs"
+           data-id="{{$index}}" data-current="{{current_page==$index ? 'yes' : ''}}"
+           ng-href="#m={{current_series.dir}}&v={{current_volume.dir}}&c={{current_chapter.dir}}&p={{$index}}">
+           <img class="thumbview" ng-src="{{thumb}}""/>
         </a>
     </div>
     

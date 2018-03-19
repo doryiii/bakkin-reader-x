@@ -1,10 +1,46 @@
 <?php
+date_default_timezone_set('America/Los_Angeles');
 
 /* ====================== constants ===============================*/
 const CONTENT_DIR = "content";
 const THUMB_DIR = "thumbs";
+const THUMB_WIDTH = 200;
+const THUMB_HEIGHT = 200;
 
 /* ==================== helper funcs ==============================*/
+
+function create_img($orig, $dest, $width=THUMB_WIDTH, $height=THUMB_HEIGHT) {
+    list($orig_width, $orig_height) = getimagesize($orig);
+    
+    // Make sure to keep image ratio
+    $ratio = $orig_width/$orig_height;
+    if ($width/$height > $ratio) {
+        $width = $height * $ratio;
+    } else {
+        $height = $width / $ratio;
+    }
+    
+    // Load the original image and create an img obj for the thumbnail
+    if (endsWith($orig, ".png")) {
+        $img_orig = imagecreatefrompng($orig);
+    } elseif (endsWith($orig, ".jpg") || endsWith($orig, ".jpeg")) {
+        $img_orig = imagecreatefromjpeg($orig);
+    }
+    
+    // Only downsize, don't expand
+    if ($width < $orig_width || $height < $orig_height) {
+        $img_thumb = imagecreatetruecolor($width, $height);
+        imagecopyresampled($img_thumb, $img_orig, 0, 0, 0, 0,
+        $width, $height, $orig_width, $orig_height);
+    } else {
+        $img_thumb = $img_orig;
+    }
+    
+    imageinterlace($img_thumb, true);
+    if (!file_exists(dirname($dest)))
+        mkdir(dirname($dest), 0777, true);
+    imagejpeg($img_thumb, $dest, 85);
+}
 
 function normal_dir($d, $base) {
     return $d != "." && $d != ".." && is_dir($base . "/" . $d);
@@ -33,7 +69,12 @@ function ifExist($file) {
     return file_exists($file) ? $file : "";
 }
 function thumbOf($file) {
-    
+    if (!file_exists(dirOf($file)))
+        return null;
+    $thumb_file = THUMB_DIR . "/" . $file;
+    if (!file_exists($thumb_file))
+        create_img(dirOf($file), $thumb_file);
+    return $thumb_file;
 }
 function dirOf($file) {
     return CONTENT_DIR . "/" . $file;
@@ -79,31 +120,36 @@ function getList() {
                 }
 
                 $chapter_files = scandir(dirOf($chapter_dir));
-                $chapter_pages = array_filter(
+                $chapter_pages = array_values(array_filter(
                     $chapter_files,
                     function($f) use($chapter_dir) {
                         return is_file(dirOf($chapter_dir . "/" . $f)) &&
                                (endsWith($f, ".png") || endsWith($f, ".jpg")) &&
                                $f != "thumb.png";
-                    });
-                $chapter_pages = array_values(array_map(
-                    function($d) use($chapter_dir){
+                    }));
+                $chapter_page_links = array_values(array_map(
+                    function($d) use($chapter_dir) {
                         return dirOf($chapter_dir . "/" . $d);},
                     $chapter_pages));
-
+                $chapter_thumbs = array_values(array_map(
+                    function($d) use($chapter_dir) {
+                        return thumbOf($chapter_dir . "/" . $d);},
+                    $chapter_pages));
+                    
                 array_push($chapters, [
                     "dir" => $chapter,
                     "name" => $chapter_name,
                     "thumb" => ifExist(dirOf($chapter_dir . "/thumb.png")) ?
                                 (dirOf($chapter_dir . "/thumb.png")) : "",
-                    "pages" => $chapter_pages
+                    "pages" => $chapter_page_links,
+                    "thumbs" => $chapter_thumbs,
                 ]);
             }
             
             array_push($volumes, [
                 "dir" => $volume,
                 "name" => $volume_info ? trim($volume_info[0]) : $volume,
-                "thumb" => ifExist(dirOf($volume_dir . "/thumb.png")),
+                "thumb" => thumbOf($volume_dir . "/thumb.png"),
                 "chapters" => $chapters
             ]);
             

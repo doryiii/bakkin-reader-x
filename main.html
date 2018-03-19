@@ -25,7 +25,7 @@
                         return next_page.chapter.pages[next_page.page];
                 }
                 return null;
-            }
+            };
         });
     })();
     
@@ -84,9 +84,13 @@
         }
     }
     
-    function imgDone() {
+    function imgDone(page) {
         $("#pageview img").attr("src", $("#currentimg").attr("src"));
         $("#nextimg").attr("src", $("#currentimg").attr("data-next"));
+        var state = $.deparam.fragment(true);
+        if ("p" in state && state.p != "0" && state.p != 0)
+            $('html, body').animate({scrollTop: $('#pageview').offset().top},
+                                    200);
     }
     function preloadDone() {
         $("#nextimg2").attr("src", $("#nextimg").attr("data-next"));
@@ -147,7 +151,7 @@
                                     "&c=" + scope.prev_page.chapter.dir +
                                     "&p=" + scope.prev_page.page;
                 } else {
-                    location.hash = "#";
+                    location.hash = "#m=" + scope.current_series.dir;
                 }
                 return false;
             // right
@@ -158,7 +162,7 @@
                                     "&c=" + scope.next_page.chapter.dir +
                                     "&p=" + scope.next_page.page;
                 } else {
-                    location.hash = "#";
+                    location.hash = "#m=" + scope.current_series.dir;
                 }
                 return false;
             }
@@ -227,7 +231,7 @@
 <body ng-controller="mainCtrl as c">
 
 <!-- ====================== the landing page ======================= -->
-<div id="all-series" ng-show="current_series == null">
+<div id="all-series" ng-if="current_series == null">
     <div id="pagetitle">
         <span id="apptitle">Bakkin Reader X</span>
         <span id="appsubtitle">By Dory</span>
@@ -240,17 +244,26 @@
         <a ng-href="#m={{manga.dir}}" class="field title">
             {{manga.name}}
         </a>
-        <div class="field author">{{manga.author}}</div>
+        <div class="field author" ng-if="manga.author">
+            {{manga.author}}
+        </div>
+
         <a ng-href="#m={{manga.dir}}&v={{manga.latest_vol}}&c={{manga.latest_chap}}"
            class="field latest">
             {{manga.latest_name}}
             <span class="field latest-time">({{manga.latest_time}})</span>
         </a>
+        <span class="field status">{{manga.status}}</span>
+        <a ng-href="{{manga.buy_link}}" ng-if="manga.buy_link"
+           class="field buy">
+            {{manga.buy_from}}
+        </a>
+
     </div>
 </div>
 
 <!-- ====================== the series page ======================= -->
-<div id="series-view" ng-show="current_series != null && current_chapter == null">
+<div id="series-view" ng-if="current_series != null && current_chapter == null">
     <div id="series-info">
         <div class="cover"><img ng-src="{{current_series.thumb}}"/></div>
         <div class="field title">
@@ -266,7 +279,7 @@
             <tr>
             <td rowspan="2" style="vertical-align: top; width: 1px">
                 <div class="volume-cover">
-                    <img ng-src="{{volume.thumb}}"/>
+                    <img ng-src="{{volume.thumb ? volume.thumb : 'nocover.png'}}"/>
                 </div>
             </td>
             <td style="vertical-align: top; height: 1px;" class="title">
@@ -276,10 +289,10 @@
                 <div class="chapter" ng-repeat="chapter in volume.chapters">
                     <a ng-href="#m={{current_series.dir}}&v={{volume.dir}}&c={{chapter.dir}}">
                         {{chapter.name}}
-                        <span class="tooltip">
-                            <img ng-src="{{chapter.pages[0]}}"/>
-                        </span>
                     </a>
+                    <span class="tooltip" ng-if="chapter.thumb">
+                        <img ng-src="{{chapter.thumb}}"/>
+                    </span>
                 </div>
             </td>
             </tr>
@@ -289,7 +302,7 @@
 </div>
 
 <!-- ====================== the chapter page ======================= -->
-<div id="chapter-view" ng-show="current_chapter != null">
+<div id="chapter-view" ng-if="current_chapter != null">
     <div id="chapter-info">
         <span id="homelink"><a ng-href="#">Home</a></span>
         <img id="series-thumb" ng-src="{{current_series.thumb}}"/>
@@ -315,13 +328,14 @@
         </a>
     </div>
     
+    <!-- TODO: images for the prev/next links -->
     <div id="pageview">
         <div id="img-container">
             <img />
-            <a id="left"
+            <a id="left" ng-show="prev_page.chapter"
                ng-href="#m={{current_series.dir}}&v={{prev_page.volume.dir}}&c={{prev_page.chapter.dir}}&p={{prev_page.page}}">
             </a>
-            <a id="right"
+            <a id="right" ng-show="next_page.chapter"
                ng-href="#m={{current_series.dir}}&v={{next_page.volume.dir}}&c={{next_page.chapter.dir}}&p={{next_page.page}}">
             </a>
         </div>

@@ -66,9 +66,11 @@ td, th {
     font-weight: bold;
     font-size: larger;
 }
-.series .author, .series .latest, .series .latest-time,
+.series .author, .series .latest, .series .latest-time, .series .buy,
+.series .status,
 #series-view .author, #series-view .latest, #series-view .latest-time {
     font-size: small;
+    display: block;
 }
 .series .author {
     margin-bottom: 12px;
@@ -80,6 +82,18 @@ td, th {
 }
 .series .author:before, #series-view .author:before {
     content: "Artist: ";
+    font-style: italic;
+    font-size: smaller;
+    color: #999999;
+}
+.series .buy:before {
+    content: "Buy from ";
+    font-style: italic;
+    font-size: smaller;
+    color: #999999;    
+}
+.series .status:before {
+    content: "Status: ";
     font-style: italic;
     font-size: smaller;
     color: #999999;
@@ -130,10 +144,10 @@ td, th {
     font-size: small;
 }
 .volume .chapter a {
-    display: block;
+    display: inline-block; 
     padding: 2px 10px 2px 10px;
 }
-.volume .chapter a .tooltip {
+.volume .chapter a + .tooltip {
     visibility: hidden;
     opacity: 0;
     transition: opacity 1s;
@@ -148,19 +162,24 @@ td, th {
     position: absolute;
     z-index: 1;
 }
-.volume .chapter a:hover .tooltip {
+.volume .chapter a:hover + .tooltip {
     visibility: visible;
     opacity: 1;
 }
-.volume .chapter a .tooltip img {
+.volume .chapter a + .tooltip img {
     width: 120px;
+    display: none;
+}
+.volume .chapter a:hover + .tooltip img {
+    width: 120px;
+    display: inherit;
 }
 
 #chapter-view {
     padding: 5px;
 }
 #series-thumb, #chapter-thumb {
-    height: 21px;
+    max-height: 21px;
     vertical-align: top;
     border: 1px solid gray;
     box-sizing: border-box;
@@ -207,19 +226,20 @@ td, th {
     top: 0px;
 }
 #pageview img {
-    max-height: 1800px;
+    max-height: 1500px;
+    max-width: 1800px;
 }
 #pageview #left {
     position: absolute;
     top: 0;
     left: 0;
-    right: 50%;
+    right: 65%;
     bottom: 0;
 }
 #pageview #right {
     position: absolute;
     top: 0;
-    left: 50%;
+    left: 65%;
     right: 0;
     bottom: 0;
 }

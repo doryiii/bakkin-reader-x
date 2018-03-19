@@ -2,6 +2,7 @@
 
 /* ====================== constants ===============================*/
 const CONTENT_DIR = "content";
+const THUMB_DIR = "thumbs";
 
 /* ==================== helper funcs ==============================*/
 
@@ -31,6 +32,12 @@ function sanitize($str) {
 function ifExist($file) {
     return file_exists($file) ? $file : "";
 }
+function thumbOf($file) {
+    
+}
+function dirOf($file) {
+    return CONTENT_DIR . "/" . $file;
+}
 
 /* ========================= main =================================*/
 /* NOTE: One potential optimization here is to load each series only
@@ -38,8 +45,7 @@ function ifExist($file) {
  * NOTE: Another one is probably to load the list of chapter pages
  * only when needed.
  * This works for Bakkin, since we only have a couple of series,
- * but obviously wouldn't work for bigger manga reader sites 
- * TODO: factorize all the $_dir's
+ * but obviously wouldn't work for bigger manga reader sites
  */
 function getList() {
     $series_dirs = list_subdirs(CONTENT_DIR);
@@ -47,55 +53,57 @@ function getList() {
     $series = [];
 
     foreach ($series_dirs as $series_dir) {
-        $series_info = file(CONTENT_DIR . "/" . $series_dir . "/SERIESINFO");
+        $series_info = file(dirOf($series_dir . "/SERIESINFO"));
         
-        $all_volumes = list_subdirs(CONTENT_DIR . "/" . $series_dir);
+        $all_volumes = list_subdirs(dirOf($series_dir));
         $volumes = [];
         $last_chapter = null;
         $last_volume = null;
         $last_chapter_name = null;
         $last_chapter_time = 0;
         foreach ($all_volumes as $volume) {
-            $volume_dir = CONTENT_DIR . "/" . $series_dir . "/" . $volume;
-
+            $volume_dir = $series_dir . "/" . $volume;
+            $volume_info = file(dirOf($volume_dir . "/VOLUMEINFO"));
+            
             $chapters = [];
-            $all_chapters = list_subdirs($volume_dir);
+            $all_chapters = list_subdirs(dirOf($volume_dir));
             foreach ($all_chapters as $chapter) {
                 $chapter_dir = $volume_dir . "/" . $chapter;
-                $chapter_info = file($chapter_dir . "/CHAPTERINFO");
-                if (filemtime($chapter_dir) > $last_chapter_time) {
-                    $last_chapter_time = filemtime($chapter_dir);
-                    $last_chapter_name = $chapter_info[0];
+                $chapter_info = file(dirOf($chapter_dir . "/CHAPTERINFO"));
+                $chapter_name = $chapter_info[0] ? trim($chapter_info[0]) : $chapter;
+                if (filemtime(dirOf($chapter_dir)) > $last_chapter_time) {
+                    $last_chapter_time = filemtime(dirOf($chapter_dir));
+                    $last_chapter_name = $chapter_name;
                     $last_chapter = $chapter;
                     $last_volume = $volume;
                 }
 
-                $chapter_files = scandir($chapter_dir);
+                $chapter_files = scandir(dirOf($chapter_dir));
                 $chapter_pages = array_filter(
                     $chapter_files,
                     function($f) use($chapter_dir) {
-                        return is_file($chapter_dir . "/" . $f) &&
+                        return is_file(dirOf($chapter_dir . "/" . $f)) &&
                                (endsWith($f, ".png") || endsWith($f, ".jpg")) &&
                                $f != "thumb.png";
                     });
                 $chapter_pages = array_values(array_map(
                     function($d) use($chapter_dir){
-                        return $chapter_dir . "/" . $d;},
+                        return dirOf($chapter_dir . "/" . $d);},
                     $chapter_pages));
 
                 array_push($chapters, [
                     "dir" => $chapter,
-                    "name" => $chapter_info[0] ? trim($chapter_info[0]) : $chapter,
-                    "thumb" => ifExist($chapter_dir . "/thumb.png") ?
-                                ($chapter_dir . "/thumb.png") : "",
+                    "name" => $chapter_name,
+                    "thumb" => ifExist(dirOf($chapter_dir . "/thumb.png")) ?
+                                (dirOf($chapter_dir . "/thumb.png")) : "",
                     "pages" => $chapter_pages
                 ]);
             }
             
             array_push($volumes, [
                 "dir" => $volume,
-                "name" => $volume,
-                "thumb" => ifExist($volume_dir . "/thumb.png"),
+                "name" => $volume_info ? trim($volume_info[0]) : $volume,
+                "thumb" => ifExist(dirOf($volume_dir . "/thumb.png")),
                 "chapters" => $chapters
             ]);
             
@@ -105,6 +113,9 @@ function getList() {
             "dir" => $series_dir,
             "name" => trim($series_info[0]),
             "author" => trim($series_info[1]),
+            "status" => trim($series_info[2]),
+            "buy_from" => trim($series_info[3]),
+            "buy_link" => trim($series_info[4]),
             "thumb" => end($volumes)["thumb"],
             "latest_vol" => $last_volume,
             "latest_chap" => $last_chapter,

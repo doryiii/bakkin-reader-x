@@ -3,12 +3,13 @@ date_default_timezone_set('America/Los_Angeles');
 
 /* ====================== constants ===============================*/
 const CONTENT_DIR = "content";
-const THUMB_DIR = "thumbs";
-const THUMB_WIDTH = 180;
-const THUMB_HEIGHT = 180;
-const IMG_DIR = "resizes";
+const CACHE_DIR = "caches";
+const THUMB_WIDTH = 100;
+const THUMB_HEIGHT = 100;
 const IMG_WIDTH = 1800;
 const IMG_HEIGHT = 1500;
+const COVER_WIDTH = 350;
+const COVER_HEIGHT = 350;
 
 /* ==================== helper funcs ==============================*/
 
@@ -40,8 +41,6 @@ function create_img($orig, $dest, $width, $height) {
     }
 
     imageinterlace($img_thumb, true);
-    if (!file_exists(dirname($dest)))
-        mkdir(dirname($dest), 0777, true);
     imagejpeg($img_thumb, $dest, 85);
 }
 
@@ -60,27 +59,35 @@ function endsWith($haystack, $needle) {
     return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
 }
 
+function dirOf($file) {
+    return CONTENT_DIR . "/" . $file;
+}
+
 function ifExist($file) {
     return file_exists($file) ? $file : "";
 }
-function thumbOf($file) {
+
+function genPreview($file, $dir, $prefix, $max_width, $max_height) {
     if (!file_exists(dirOf($file)))
         return null;
-    $thumb_file = THUMB_DIR . "/" . $file;
-    if (!file_exists($thumb_file))
-        create_img(dirOf($file), $thumb_file, THUMB_WIDTH, THUMB_HEIGHT);
-    return $thumb_file;
+    $out_file = $dir . "/" . dirname($file) . "/" .
+                $prefix . basename($file) . ".jpg";
+
+    if (!file_exists($out_file)) {
+        if (!file_exists(dirname($out_file)))
+            mkdir(dirname($out_file), 0777, true);
+        create_img(dirOf($file), $out_file, $max_width, $max_height);
+    }
+    return $out_file;
+}
+function thumbOf($file) {
+    return genPreview($file, CACHE_DIR, "thumb_", THUMB_WIDTH, THUMB_HEIGHT);
 }
 function imgOf($file) {
-    if (!file_exists(dirOf($file)))
-        return null;
-    $img_file = IMG_DIR . "/" . $file;
-    if (!file_exists($img_file))
-        create_img(dirOf($file), $img_file, IMG_WIDTH, IMG_HEIGHT);
-    return $img_file;
+    return genPreview($file, CACHE_DIR, "img_", IMG_WIDTH, IMG_HEIGHT);
 }
-function dirOf($file) {
-    return CONTENT_DIR . "/" . $file;
+function coverOf($file) {
+    return genPreview($file, CACHE_DIR, "cover_", COVER_WIDTH, COVER_HEIGHT);
 }
 
 /* ========================= main =================================*/
@@ -152,7 +159,7 @@ function getList() {
             array_push($volumes, [
                 "dir" => $volume,
                 "name" => $volume_info ? trim($volume_info[0]) : $volume,
-                "thumb" => thumbOf($volume_dir . "/thumb.png"),
+                "thumb" => coverOf($volume_dir . "/thumb.png"),
                 "thumb_large" => imgOf($volume_dir . "/thumb.png"),
                 "chapters" => $chapters
             ]);

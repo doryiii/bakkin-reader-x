@@ -55,9 +55,6 @@ td, th {
     margin-right: 10px;
     box-shadow: 1px 1px 3px black;
 }
-.series .cover img.thumblarge {
-    display: none;
-}
 .series .field, #series-view .field {
     text-shadow: 1px 1px 3px black;
     padding: 2px 5px 2px 5px;
@@ -78,7 +75,7 @@ td, th {
     display: block;
 }
 .series .author {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 .series .latest-time {
     font-size: smaller;
@@ -87,7 +84,7 @@ td, th {
     color: #AAAAAA;
 }
 .series .progress, .series .begin {
-    margin-top: 12px;
+    margin-top: 10px;
 }
 .series .author:before, #series-view .author:before {
     content: "Artist: ";
@@ -350,11 +347,9 @@ td, th {
         margin-right: 0px;
         padding: 10px;
     }
-    .series .cover img.thumblarge {
-        display: inherit;
-    }
-    .series .cover img.thumbsmall {
-        display: none;
+    .series .cover img {
+        width: 120px !important;
+        height: inherit;
     }
 
     /* --- */

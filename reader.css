@@ -1,7 +1,7 @@
 body {
     background-color: #222222;
     color: #DDDDDD;
-    padding-bottom: 10px;
+    padding-bottom: 0px;
     font-family: sans-serif;
     margin: 0px;
 }
@@ -114,6 +114,13 @@ td, th {
     font-weight: normal;
     color: #999999;
 }
+.series .progress:before, .series .begin:before {
+    content: "Read: ";
+    font-style: italic;
+    font-size: smaller;
+    font-weight: normal;
+    color: #999999;
+}
 
 .series .cover:hover + .title, .series .title:hover, .series .latest:hover {
     background-color: #555555;
@@ -182,7 +189,7 @@ td, th {
     visibility: hidden;
     opacity: 0;
     transition: opacity 1s;
-    width: 120px;
+    height: 100px;
     background-color: #111111;
     color: #fff;
     text-align: center;
@@ -191,13 +198,13 @@ td, th {
     border-radius: 6px;
 
     position: absolute;
-    top: -100px;
+    top: -80px;
     z-index: 1;
 }
 .volume .chapter a + .tooltip::after {
     content: " ";
     position: absolute;
-    top: 110px;
+    top: 88px;
     right: 100%;
     margin-top: -5px;
     border-width: 5px;
@@ -277,7 +284,7 @@ td, th {
     width: 30px;
     height: 20px;
     text-align: center;
-    z-index: 98;
+    z-index: 1;
     font-weight: bold;
     text-decoration: none;
     display: block;
@@ -323,6 +330,11 @@ td, th {
     right: 65%;
     bottom: 0;
 }
+#pageview #left:hover {
+    background-image: url('left.png');
+    background-repeat: no-repeat;
+    background-position: left 15px center;
+}
 #pageview #right {
     position: absolute;
     top: 0;
@@ -330,8 +342,16 @@ td, th {
     right: 0;
     bottom: 0;
 }
+#pageview #right:hover {
+    background-image: url('right.png');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+}
 #pageview #right:hover, #pageview #left:hover {
     background-color: inherit;
+}
+#preloader {
+    height: 1px;
 }
 #preloader img {
     width: 1px;
@@ -368,8 +388,11 @@ td, th {
         margin-right: 0px !important;
         padding: 0px !important;
     }
+    .volume {
+        padding: 6px;
+    }
     .volume-cover img {
-        width: 70px !important;
+        width: 70px;
     }
     .volume .title {
         padding-left: 10px;
@@ -392,7 +415,7 @@ td, th {
 
     /* --- */
     #chapter-view {
-        padding: 2px !important;
+        padding: 2px;
     }
     #navbar {
         margin-left: 0px;
@@ -420,5 +443,8 @@ td, th {
     #pagenum {
         margin-left: 1px;
         margin-right: 0px;
+    }
+    #pageview #left:hover, #pageview #right:hover {
+        background-image: none;
     }
 }

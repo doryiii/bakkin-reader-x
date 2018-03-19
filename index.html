@@ -109,12 +109,12 @@
     function imgDone() {
         var preloader = $("#preloader img");
         var viewer = $("#pageview img");
-        
+
         // If the preloader is loading the main image, then move the img to
         // the main viewer, then setup viewport size for next page previewer
         if (preloader.attr("data-type") == "current") {
             viewer.attr("src", preloader.attr("src"));
-            viewer.attr("onload", '$("#pageview #img-container")' + 
+            viewer.attr("onload", '$("#pageview #img-container")' +
                                   '.width($("#pageview img").width())');
             viewer.removeClass("preview");
             preloader.attr("data-type", "preload");
@@ -253,7 +253,7 @@
             }
 
             scope.$apply();
-            
+
             if ("m" in state && "v" in state && "c" in state) {
                 // Prepare the preloader. Display the thumb img while loading
                 // Putting here since it needs Angular to populate the DOM
@@ -262,7 +262,7 @@
                 $("#pageview img").attr("src",
                                         scope.current_chapter.thumbs[scope.current_page]);
                 $("#pageview img").addClass("preview");
-                
+
                 // Scroll to the top of the page, or the image, depending on
                 // whether we're on the first page of the chapter or not.
                 var state = $.deparam.fragment(true);
@@ -421,14 +421,14 @@
 
         </div>
     </div>
-</div>
 
-<div id="preloader">
-    <img ng-src="{{current_chapter.pages[current_page]}}"
-         onload="imgDone()"
-         data-type="current"
-         data-next="{{next_page.chapter ? next_page.chapter.pages[next_page.page] : ''}}"
-         data-next-next="{{next_page ? getNextNextImg() : ''}}"/>
+    <div id="preloader">
+        <img ng-src="{{current_chapter.pages[current_page]}}"
+            onload="imgDone()"
+            data-type="current"
+            data-next="{{next_page.chapter ? next_page.chapter.pages[next_page.page] : ''}}"
+            data-next-next="{{next_page ? getNextNextImg() : ''}}"/>
+    </div>
 </div>
 
 <body>

@@ -2,7 +2,7 @@
 date_default_timezone_set('America/Los_Angeles');
 
 /* ====================== constants ===============================*/
-const CONTENT_DIR = "content";
+const CONTENT_DIR = "manga";
 const CACHE_DIR = "caches";
 const THUMB_WIDTH = 100;
 const THUMB_HEIGHT = 100;
@@ -93,8 +93,6 @@ function coverOf($file) {
 /* ========================= main =================================*/
 /* NOTE: One potential optimization here is to load each series only
  * when queried, instead of loading all series like this.
- * NOTE: Another one is probably to load the list of chapter pages
- * only when needed.
  * This works for Bakkin, since we only have a couple of series,
  * but obviously wouldn't work for bigger manga reader sites
  */

@@ -331,7 +331,7 @@ td, th {
     bottom: 0;
 }
 #pageview #left:hover {
-    background-image: url('left.png');
+    background-image: url('static/left.png');
     background-repeat: no-repeat;
     background-position: left 15px center;
 }
@@ -343,7 +343,7 @@ td, th {
     bottom: 0;
 }
 #pageview #right:hover {
-    background-image: url('right.png');
+    background-image: url('static/right.png');
     background-repeat: no-repeat;
     background-position: right 15px center;
 }

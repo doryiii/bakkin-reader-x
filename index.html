@@ -15,7 +15,7 @@
     // AngularJS glue
     (function(){
         var app = angular.module("bakkinreader", ["ngCookies"]);
-        app.controller('mainCtrl', function($scope, $cookies) {
+        app.controller('mainCtrl', function($scope, $window, $cookies) {
 
             // TODO: This is a very strange-looking hack...
             $scope.getNextNextImg = function() {
@@ -33,12 +33,15 @@
             // cookie stuffs
             $scope.set_progress = function() {
                 if ($scope.current_volume && $scope.current_chapter) {
-                    $cookies.put("prog" + $scope.current_series.dir,
-                                 location.hash);
+                    var now = new $window.Date();
+                    var exp = new $window.Date(now.getFullYear() + 2,
+                                               now.getMonth(), now.getDate());
+                    $cookies.put("bakkin_prog" + $scope.current_series.dir,
+                                 location.hash, {expires: exp});
                 }
             };
             $scope.get_progress = function(seriesdir) {
-                return $cookies.get("prog" + seriesdir);
+                return $cookies.get("bakkin_prog" + seriesdir);
             };
         });
     })();
@@ -401,7 +404,6 @@
         </a>
     </div>
 
-    <!-- TODO: images for the prev/next links -->
     <div id="pageview">
         <div id="img-container">
             <img />

@@ -172,7 +172,6 @@ function getList() {
             "buy_from" => trim($series_info[3]),
             "buy_link" => trim($series_info[4]),
             "thumb" => end($volumes)["thumb"],
-            "thumb_large" => end($volumes)["thumb_large"],
             "latest_vol" => $last_volume,
             "latest_chap" => $last_chapter,
             "latest_name" => trim($last_chapter_name),

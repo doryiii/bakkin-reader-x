@@ -119,6 +119,9 @@
             viewer.attr("src", preloader.attr("src"));
             viewer.attr("onload", '$("#pageview #img-container")' +
                                   '.width($("#pageview img").width())');
+            $(window).resize(function() {
+                $("#pageview #img-container").width($("#pageview img").width());
+            });
             viewer.removeClass("preview");
             preloader.attr("data-type", "preload");
         }

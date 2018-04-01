@@ -316,7 +316,6 @@ td, th {
     width: 1000px;
 }
 #pageview img {
-    max-height: 1500px;
     max-width: 1800px;
     box-shadow: 0 0 15px black;
 }
@@ -360,13 +359,13 @@ td, th {
 }
 
 /* ===================== small screen width overrides ====================== */
-@media handheld, (min-resolution: 2dppx), (max-width: 900px), (max-device-width: 900px) {
+@media handheld, (max-width: 900px), (max-device-width: 900px) {
     #pageview #img-container, #pageview img {
         width: 100% !important;
     }
 }
 /* =========================== Mobile overrides ============================ */
-@media handheld, (min-resolution: 2dppx), (max-width: 700px), (max-device-width: 700px) {
+@media handheld, (max-width: 700px), (max-device-width: 700px) {
     .series {
         float: none;
         width: 100%;

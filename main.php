@@ -137,12 +137,12 @@ function getList() {
                     }));
                 $chapter_page_links = array_values(array_map(
                     function($d) use($chapter_dir) {
-                        return imgOf($chapter_dir . "/" . $d);},
-                    $chapter_pages));
+                        return imgOf($chapter_dir . "/" . $d);
+                    }, $chapter_pages));
                 $chapter_thumbs = array_values(array_map(
                     function($d) use($chapter_dir) {
-                        return thumbOf($chapter_dir . "/" . $d);},
-                    $chapter_pages));
+                        return thumbOf($chapter_dir . "/" . $d);
+                    }, $chapter_pages));
 
                 array_push($chapters, [
                     "dir" => $chapter,
@@ -166,7 +166,7 @@ function getList() {
 
         $series[$series_dir] = [
             "dir" => $series_dir,
-            "name" => trim($series_info[0]),
+            "name" => $series_info[0] ? trim($series_info[0]) : $series_dir,
             "author" => trim($series_info[1]),
             "status" => trim($series_info[2]),
             "buy_from" => trim($series_info[3]),

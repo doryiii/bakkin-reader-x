@@ -95,3 +95,7 @@ This web app can be modified to load a single series at a time, on demand,
 to help with larger group with more series to show, and that should not be
 hard. However, that is outside the scope of Bakkin.
 
+## License
+
+[AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.en.html). This license is
+chosen so that anyone using this would also make their modifications available.

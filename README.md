@@ -37,8 +37,10 @@ organized series/volumes/chapters/pages.png. To add metadata, read on.
             |-- SERIESINFO
             `-- v01
                 |-- VOLUMEINFO
+                |-- thumb.png
                 |-- c001
                 |   |-- CHAPTERINFO
+                |   |-- thumb.png
                 |   |-- 001.png
                 |   |-- ...
                 |   `-- 013.png
@@ -65,6 +67,10 @@ For example:
 custom volume/chapter title. These files are optional. If not provided, the
 directory name ("v01", "c001" etc.) will be used instead. They are just there
 to make directory names pretty.
+
+**thumb.png** files under each volume are used to show the volume covers.
+**thumb.png** files under each chapter are the tiny square chapter icons.
+Both are optional.
 
 The *manga/* directory does not have to be exposed by the web server.
 

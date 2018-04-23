@@ -34,6 +34,7 @@ td, th {
 
 /* ========================== Landing page ============================ */
 #pagetitle {
+    display: block;
     margin: 0px 0px 10px 0px;
     padding: 7px 15px 5px 15px;
     background-color: #333333;
@@ -173,12 +174,19 @@ td, th {
     clear: both;
     padding: 10px;
 }
-.volume-cover img {
+.volume-cover-large {
     width: 120px;
-    float: left;
     border: 1px solid gray;
     margin: 0px;
     box-shadow: 1px 1px 3px black;
+}
+.volume-cover-small {
+    display: none;
+    height: 50px;
+    border-top: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    margin: 0px 7px 0px 0px;
 }
 .volume .title {
     border-bottom: 1px solid gray;
@@ -205,7 +213,7 @@ td, th {
     visibility: hidden;
     opacity: 0;
     transition: opacity 1s;
-    height: 100px;
+    max-height: 100px;
     background-color: #111111;
     color: #fff;
     text-align: center;
@@ -214,13 +222,13 @@ td, th {
     border-radius: 6px;
 
     position: absolute;
-    top: -80px;
+    bottom: -10px;
     z-index: 1;
 }
 .volume .chapter a + .tooltip::after {
     content: " ";
     position: absolute;
-    top: 88px;
+    bottom: 16px;
     right: 100%;
     margin-top: -5px;
     border-width: 5px;
@@ -412,23 +420,23 @@ td, th {
     .volume {
         padding: 6px;
     }
-    .volume-cover img {
-        width: 70px;
+    .volume-cover-large {
+        display: none;
+    }
+    .volume-cover-small {
+        display: block;
     }
     .volume .title {
-        padding-left: 10px;
-        padding-right: 0px;
+        padding: 0px;
     }
     .volume .chap-list {
         padding-left: 0px;
     }
-    .volume .chapter {
+    .volume .chapter:not(:last-child) {
         border-bottom: 1px solid #303030;
     }
     .volume .chapter a {
-        padding-right: 3px;
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding: 4px 3px 4px 5px;
     }
     .volume .chapter a + .tooltip {
         display: none !important;

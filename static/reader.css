@@ -346,6 +346,10 @@ td, th {
 #pageview img.preview {
     width: 100%;
 }
+
+#pageview a#left:focus, #pageview a#right:focus {
+    outline: none;
+}
 #pageview #left {
     position: absolute;
     top: 0;

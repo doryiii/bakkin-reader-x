@@ -254,10 +254,10 @@ $(document).ready(function() {
             var state = $.deparam.fragment(true);
             if ("p" in state && state.p != "0" && state.p != 0)
                 $('html, body').animate(
-                    {scrollTop: $('#scrollmark').offset().top}, 200);
-                else
-                    $('html, body').animate(
-                        {scrollTop: $('#chapter-view').offset().top}, 200);
+                    {scrollTop: $('#scrollmark').offset().top}, 90);
+            else
+                $('html, body').animate(
+                    {scrollTop: $('#chapter-view').offset().top}, 90);
         }
     });
 

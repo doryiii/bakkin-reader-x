@@ -173,7 +173,8 @@ function getList() {
 
             array_push($volumes, [
                 "dir" => $volume,
-                "name" => $volume_info ? trim($volume_info[0]) : $volume,
+                "name" => $volume_info[0] ? trim($volume_info[0]) : $volume,
+                "download_link" => trim($volume_info[1]),
                 "thumb" => coverOf($volume_dir . "/thumb.png"),
                 "thumb_large" => imgOf($volume_dir . "/thumb.png"),
                 "chapters" => $chapters

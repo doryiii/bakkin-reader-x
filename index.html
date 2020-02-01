@@ -74,7 +74,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <!-- ====================== the series page ======================= -->
 <div id="series-view" ng-if="current_series != null && current_chapter == null">
     <div id="series-info">
-        <div class="cover"><img ng-src="{{current_series.thumb}}"/></div>
+        <!--<div class="cover"><img ng-src="{{current_series.thumb}}"/></div>-->
         <div class="field title">
             <a href="#" class="homelink">Home</a>
             <span class="homelink_after"> &gt;</span>
@@ -96,7 +96,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <td><img class="volume-cover-small"
                              ng-src="{{volume.thumb ? volume.thumb : 'static/nocover.png'}}"/>
                     </td>
-                    <td>{{volume.name}}</td>
+                    <td><span class="volume-name">{{volume.name}}</span>
+                        <span class="volume-download" ng-if="volume.download_link">
+                            - <a ng-href="{{volume.download_link}}">Download</a>
+                        </span></td>
                 </tr></tbody></table>
             </td></tr><tr>
             <td style="vertical-align:top" class="chap-list">

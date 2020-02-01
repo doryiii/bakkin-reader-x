@@ -63,8 +63,14 @@ For example:
     Amazon.co.jp
     https://www.amazon.co.jp/s/field-keywords=%E3%82%86%E3%82%8B%E3%82%86%E3%82%8A
 
-**VOLUMEINFO** and **CHAPTERINFO** are files containing a single line with a
-custom volume/chapter title. These files are optional. If not provided, the
+**VOLUMEINFO** files contain zero to two lines, with the first line being the
+volume title, and the second line contains a link to download the batch of the
+volume. Both lines, as well as the file, are optional. If not provided, the
+directory name will be used to show the volume title and no download link will
+be presented.
+
+**CHAPTERINFO** are files containing a single line with a
+custom chapter title. These files are optional. If not provided, the
 directory name ("v01", "c001" etc.) will be used instead. They are just there
 to make directory names pretty.
 

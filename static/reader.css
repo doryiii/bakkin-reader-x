@@ -166,11 +166,6 @@ td, th {
     font-size: small;
     display: block;
 }
-#series-view .homelink_after {
-    content: " >";
-    font-weight: normal;
-    font-size: smaller;
-}
 #series-view #vol-list {
     clear: both;
     padding: 5px;
@@ -259,7 +254,10 @@ td, th {
 
 /* ========================== Chapter view ============================ */
 #chapter-view {
-    padding: 5px;
+    padding: 0px 5px 5px 5px;
+}
+#chapter-info {
+    padding-left: 10px;
 }
 #series-thumb, #chapter-thumb {
     max-height: 21px;
@@ -267,7 +265,7 @@ td, th {
     border: 1px solid gray;
     box-sizing: border-box;
 }
-#series-title a, #homelink a {
+#series-title a {
     font-size: large;
     font-weight: bold;
     padding: 1px 8px;
@@ -401,6 +399,9 @@ td, th {
 }
 /* =========================== Mobile overrides ============================ */
 @media handheld, (max-width: 700px), (max-device-width: 700px) {
+    #pagetitle {
+        margin-bottom: 5px;
+    }
     .series {
         float: none;
         width: 100%;
@@ -414,12 +415,6 @@ td, th {
     }
 
     /* --- */
-    #series-view .homelink {
-        padding-left: 5px;
-        padding-right: 5px;
-        background-color: #111111;
-        border: 1px solid gray;
-    }
     #series-view #series-info {
         margin-left: 3px;
     }
@@ -461,10 +456,13 @@ td, th {
         margin-left: 0px;
         margin-right: 0px;
     }
+    #chapter-info {
+        padding-left: 1px;
+    }
     #series-thumb, #chapter-thumb {
         display: none;
     }
-    #series-title a, #homelink a, .navbtn {
+    #series-title a, .navbtn {
         padding-left: 5px;
         padding-right: 5px;
         padding-bottom: 1px;

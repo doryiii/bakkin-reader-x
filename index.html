@@ -32,12 +32,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <body ng-controller="mainCtrl as c">
 
 <!-- ====================== the landing page ======================= -->
-<div id="all-series" ng-if="current_series == null">
-    <a id="pagetitle" href="https://github.com/doryiii/bakkin-reader-x" target="_blank">
-        <span id="apptitle">Bakkin Reader X</span>
+<div id="pagetitle">
+    <a href="#"><span id="apptitle">Bakkin Reader X</span></a>
+    <a href="https://github.com/doryiii/bakkin-reader-x" target="_blank">
         <span id="appsubtitle">By Dory</span>
     </a>
+</div>
 
+<div id="all-series" ng-if="current_series == null">
     <div class="series" ng-repeat="manga in series">
         <a ng-href="#m={{manga.dir}}" class="cover">
             <img class="thumbsmall" ng-src="{{manga.thumb}}"/>
@@ -76,8 +78,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <div id="series-info">
         <!--<div class="cover"><img ng-src="{{current_series.thumb}}"/></div>-->
         <div class="field title">
-            <a href="#" class="homelink">Home</a>
-            <span class="homelink_after"> &gt;</span>
             {{current_series.name}}
         </div>
         <div class="field author">{{current_series.author}}</div>
@@ -121,7 +121,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <!-- ====================== the chapter page ======================= -->
 <div id="chapter-view" ng-if="current_chapter != null">
     <div id="chapter-info">
-        <span id="homelink"><a ng-href="#">Home</a></span>
         <img id="series-thumb" ng-src="{{current_series.thumb}}"/>
         <span id="series-title"><a ng-href="#m={{current_series.dir}}">
             {{current_series.name}}</a>

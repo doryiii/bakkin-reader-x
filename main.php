@@ -101,7 +101,11 @@ function thumbOf($file) {
     return genPreview($file, CACHE_DIR, "thumb_", THUMB_WIDTH, THUMB_HEIGHT);
 }
 function imgOf($file) {
-    return genPreview($file, CACHE_DIR, "img_", IMG_WIDTH, IMG_HEIGHT);
+    if (isset($_GET["fullsize"])) {
+        return CONTENT_DIR . "/" . $file;
+    } else {
+        return genPreview($file, CACHE_DIR, "img_", IMG_WIDTH, IMG_HEIGHT);
+    }
 }
 function coverOf($file) {
     return genPreview($file, CACHE_DIR, "cover_", COVER_WIDTH, COVER_HEIGHT);

@@ -33,7 +33,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <!-- ====================== the landing page ======================= -->
 <div id="pagetitle">
-    <a href="#"><span id="apptitle">Bakkin Reader X</span></a>
+    <span id="apptitle">
+        <a href="/">&nbsp;Bakkin&nbsp;</a>
+        <a href="#">&nbsp;Reader&nbsp;</a>
+    </span>
     <a href="https://github.com/doryiii/bakkin-reader-x" target="_blank">
         <span id="appsubtitle">By Dory</span>
     </a>
@@ -136,6 +139,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <a class="navbtn" id="togglethumbbar"
            onclick="$('#thumbbar').slideToggle()">
            Thumbnails
+        </a>
+        <a class="navbtn" id="togglefullsize"
+           ng-click="set_isfullsize(!get_isfullsize())">
+            Image: {{get_isfullsize() ? "original" : "compressed"}}
         </a>
         <a class="navbtn" id="prev" ng-show="prev_chapter.chapter"
            ng-href="#m={{current_series.dir}}&v={{prev_chapter.volume.dir}}&c={{prev_chapter.chapter.dir}}">

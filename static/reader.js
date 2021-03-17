@@ -16,7 +16,7 @@
             return null;
         };
 
-        // cookie stuffs
+        // cookie stuffs for reading progress
         $scope.set_progress = function() {
             if ($scope.current_volume && $scope.current_chapter) {
                 var now = new $window.Date();
@@ -28,6 +28,20 @@
         };
         $scope.get_progress = function(seriesdir) {
             return $cookies.get("bakkin_prog" + seriesdir);
+        };
+
+        // cookie stuffs for fullsize or compressed pages
+        $scope.set_isfullsize = function(is_fullsize) {
+            if (is_fullsize != $scope.get_isfullsize()) {
+                var now = new $window.Date();
+                var exp = new $window.Date(now.getFullYear() + 2,
+                                            now.getMonth(), now.getDate());
+                $cookies.put("bakkin_isfullsize", is_fullsize, {expires: exp});
+                location.reload();
+            }
+        };
+        $scope.get_isfullsize = function() {
+            return $cookies.get("bakkin_isfullsize") == "true";
         };
     });
 })();
@@ -127,7 +141,11 @@ $(document).ready(function() {
 
     // Initial data querying
     // Trigger hashchange in case people went here with direct hashes
-    $.get("main.php")
+    var main_php_url = "main.php";
+    if (scope.get_isfullsize())
+        main_php_url += "?fullsize";
+
+    $.get(main_php_url)
     .done(function(response) { scope.$apply(function() {
         scope.series = response;
 
